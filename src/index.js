@@ -2,12 +2,44 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import Signup from './pages/Signup';
+import Login from './pages/Login';
+import NavTest from './pages/NavTest';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      light: '#3999f8',
+      main: '#2D68C4',
+      dark: '#2648a4',
+      contrastText: '#000',
+    },
+    secondary: {
+      light: '#f6cd4c',
+      main: '#f44336',
+      dark: '#f06800',
+      contrastText: '#fff',
+    },
+  },
+});
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme = {theme} >
+      <BrowserRouter>
+        <Routes>
+          <Route path = "/" element={<App />}/> 
+          <Route path = "/signup" element={<Signup />}/>
+          <Route path = "/login" element={<Login />}/>
+          <Route path = "/test" element={<NavTest />}/>
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   </React.StrictMode>
 );
 
@@ -15,3 +47,5 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
+
