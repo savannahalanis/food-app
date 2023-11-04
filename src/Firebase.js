@@ -2,6 +2,8 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import {getDatabase, ref, set} from "firebase/database";
+import { getFirestore } from "firebase/firestore";
+
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -15,23 +17,28 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = app.firestore();
-const auth = app.auth();
+const auth = getApp(app);
+const firestore = getFirestore(app); 
+// const db = app.firestore();
+
+const provider = new GoogleAuthProvider();
 
 const signInWithGoogle = () => {
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      const name = result.user.displayName;
-      localStorage.setItem("name", name);
-      refreshPage();
-      console.log(name);
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-};
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const name = result.user.displayName;
+        localStorage.setItem("name", name);
+        location.reload(); // Refresh the page
+        console.log(name);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
-
+  
+  // Define localStorage earlier in your code
+  const localStorage = window.localStorage;
 
 /*function getUserInfo(user_name ,name, contact_info, userId)
 {
