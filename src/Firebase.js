@@ -3,8 +3,21 @@ import { getAnalytics } from "firebase/analytics";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import {getDatabase, ref, set} from "firebase/database";
 import { getFirestore } from "firebase/firestore";
+import {FIREBASE_API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, SENDER_ID, APP_ID, MEASUREMENT_ID} from './info.js';
 
 
+// temporarily using because can't set up .env
+const firebaseConfig = {
+  apiKey: FIREBASE_API_KEY,
+  authDomain: AUTH_DOMAIN,
+  projectId: PROJECT_ID,
+  storageBucket: STORAGE_BUCKET,
+  messagingSenderId: SENDER_ID,
+  appId: APP_ID,
+  measurementId: MEASUREMENT_ID
+};
+
+/*
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
   authDomain: process.env.AUTH_DOMAIN,
@@ -14,10 +27,11 @@ const firebaseConfig = {
   appId: process.env.APP_ID,
   measurementId: process.env.MEASUREMENT_ID
 };
+*/
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getApp(app);
+const auth = getAuth(app);
 const firestore = getFirestore(app); 
 // const db = app.firestore();
 
@@ -28,7 +42,7 @@ const signInWithGoogle = () => {
       .then((result) => {
         const name = result.user.displayName;
         localStorage.setItem("name", name);
-        location.reload(); // Refresh the page
+        window.location.reload(); // Refresh the page
         console.log(name);
       })
       .catch((error) => {
