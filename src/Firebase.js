@@ -36,20 +36,20 @@ const firestore = getFirestore(app);
 // const db = app.firestore();
 
 const provider = new GoogleAuthProvider();
-
-const signInWithGoogle = () => {
+  
+  const signInWithGoogle = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
-        const name = result.user.displayName;
-        localStorage.setItem("name", name);
-        window.location.reload(); // Refresh the page
-        console.log(name);
+        const user = result.user;
+        console.log('User signed in:', user.displayName);
       })
       .catch((error) => {
-        console.log(error);
+        console.error('Error signing in:', error);
       });
   };
-
+  
+  export { signInWithGoogle };
+  
   
   // Define localStorage earlier in your code
   const localStorage = window.localStorage;
