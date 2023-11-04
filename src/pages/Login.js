@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container} from '@mui/material';
 import { useTheme, ThemeProvider } from '@mui/material/styles';
+import Navbar from "../components/Navbar";
 
 export default function Login() {
   const theme = useTheme();
@@ -15,7 +16,9 @@ export default function Login() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
+      <Navbar />
+      
+      <Container component="main" maxWidth="xs" >
         <CssBaseline />
         <Box
           sx={{

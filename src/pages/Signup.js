@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container} from '@mui/material';
 import { useTheme, ThemeProvider } from '@mui/material/styles';
-
+import Navbar from "../components/Navbar";
 
 
 export default function Signup() {
@@ -17,6 +17,7 @@ export default function Signup() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
+      <Navbar />
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
