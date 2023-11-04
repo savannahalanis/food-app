@@ -45,6 +45,17 @@ function NavBar() {
                 Marketplace
               </NavLink>
             </li>
+            <li className="nav-item">
+              <NavLink
+                exact
+                to="/settings"
+                activeClassName="active"
+                className="nav-links"
+                onClick={handleClick}
+              >
+                Settings
+              </NavLink>
+            </li>
            {
             auth ?  ( <Button 
             variant="contained" 
