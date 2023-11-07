@@ -5,6 +5,8 @@ import App from './App';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import NavTest from './pages/NavTest';
+import Marketplace from './pages/Marketplace';
+import MarketplaceAdd from './pages/MarketplaceAdd';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -37,6 +39,8 @@ root.render(
           <Route path = "/signup" element={<Signup />}/>
           <Route path = "/login" element={<Login />}/>
           <Route path = "/test" element={<NavTest />}/>
+          <Route path = "/marketplace" element={<Marketplace />}/>
+          <Route path = "/marketplaceadd" element={<MarketplaceAdd />}/>
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

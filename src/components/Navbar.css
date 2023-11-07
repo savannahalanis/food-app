@@ -78,7 +78,16 @@
 
 .nav-item .active {
   color: #2D68C4;
-  border: 1px solid #2D68C4;
+  border-bottom: 3px solid;
+}
+
+.nav-item .active:after {
+  
+  background: transparent;
+}
+
+.nav-item .active:hover:after {
+  width: 100%;
 }
 
 .nav-icon {
