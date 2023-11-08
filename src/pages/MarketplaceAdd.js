@@ -1,64 +1,96 @@
-import Navbar from "../components/Navbar"
-import MarketPlacePosts from "../components/MarketPlacePosts"
-import MarketplaceFilter from "../components/MarketplaceFilter"
-import "../components/Card.css"
-import {Grid, Button, Typography, Card, Box, Avatar, CardContent, TextField} from "@mui/material"
-
+import Navbar from "../components/Navbar";
+import { Card, CardContent, Grid, TextField, Typography, InputLabel, Button } from "@mui/material";
+import "../components/Card.css"; 
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'; 
 export default function MarketplaceAdd() {
-    return (
+  return (
     <>
-        <Navbar />
-        <Card className = "card">
-        <CardContent>
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs={1.5}>
-            <Avatar
-              src=""
-              sx={{ width: 56, height: 56 }}
-            />
-          </Grid>
-          <Grid item xs={8}>
-            <Typography variant="subtitle1" noWrap>
-             
-            </Typography>
-            <Typography variant="subtitle2" noWrap>
-             
-            </Typography>
-          </Grid>
-          <Grid item xs = {2}>
-          <Box
-            sx={{
-              width: 70,
-              height: 30,
-              color: 'white',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderRadius: '4px'
-            }}
-          >
-            <Typography variant="button" display="block" noWrap>
-             
-            </Typography>
-          </Box>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="h5"></Typography>
-            <Typography variant="subtitle1" color="text.secondary">
-                
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="body1">
-                Time: 
-                <TextField id="outlined-basic" label="Outlined" variant="outlined" />
-            </Typography>
-            <Typography variant="body1">Price per Swipe: $</Typography>
-            <Typography variant="body1">Contact: </Typography>
-          </Grid>
-        </Grid>
-      </CardContent>
-    </Card>
+      <Navbar />
+      <div style={{ position: 'relative', width: '100%' }}>
+        <Button 
+          variant="contained" 
+          startIcon={<ArrowBackIcon />} 
+          sx={{ position: 'absolute', top: "1.5em", left: "1.5em", color: "white" }}
+        >
+          Back
+        </Button>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <Card className="card" sx={{ maxWidth: 600, margin: 'auto', mt: 2 }}>
+          <CardContent>
+            <Grid container spacing={3}>
+              <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
+                <Typography variant = "h3">Add New Posting</Typography>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <InputLabel >Restaurant</InputLabel>
+                <TextField
+                  fullWidth
+                  id="restaurant"
+                  variant="standard"
+                  required
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <InputLabel >Price per Swipe</InputLabel>
+                <TextField
+                  fullWidth
+                  id="price"
+                  variant="standard"
+                  required
+                  InputProps={{
+                    startAdornment: <Typography>$</Typography>
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <InputLabel >Title</InputLabel>
+                <TextField
+                  fullWidth
+                  id="title"
+                  variant="standard"
+                  required
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <InputLabel >Additional Text</InputLabel>
+                <TextField
+                  fullWidth
+                  id="additional-text"
+                  variant="standard"
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <InputLabel >Time</InputLabel>
+                <TextField
+                  fullWidth
+                  id="time"
+                  variant="standard"
+                  required
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <InputLabel >Contact Information</InputLabel>
+                <TextField
+                  fullWidth
+                  id="contact"
+                  variant="standard"
+                  required
+                />
+              </Grid>
+              <Grid item xs ={6}>
+                <Button variant = "contained" sx={{color:"white"}}>Submit</Button>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+      </div>
     </>
-    )
+  );
 }
