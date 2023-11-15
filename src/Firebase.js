@@ -3,31 +3,23 @@ import { getAnalytics } from "firebase/analytics";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import {getDatabase, ref, set} from "firebase/database";
 import { getFirestore } from "firebase/firestore";
-import {FIREBASE_API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, SENDER_ID, APP_ID, MEASUREMENT_ID} from './info.js';
+//import {FIREBASE_API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, SENDER_ID, APP_ID, MEASUREMENT_ID} from './info.js';
 
 
 // temporarily using because can't set up .env
+
 const firebaseConfig = {
-  apiKey: FIREBASE_API_KEY,
-  authDomain: AUTH_DOMAIN,
-  projectId: PROJECT_ID,
-  storageBucket: STORAGE_BUCKET,
-  messagingSenderId: SENDER_ID,
-  appId: APP_ID,
-  measurementId: MEASUREMENT_ID
+  apiKey: "AIzaSyBVHJGnWw1lABpcAtlxLBhofhVpq4x8_W4",
+  authDomain: "chew-cla.firebaseapp.com",
+  databaseURL: "https://chew-cla-default-rtdb.firebaseio.com",
+  projectId: "chew-cla",
+  storageBucket: "chew-cla.appspot.com",
+  messagingSenderId: "655644247150",
+  appId: "1:655644247150:web:daa23e1f4c7530f6c1527f",
+  measurementId: "G-DNWPKD3L58"
 };
 
-/*
-const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY,
-  authDomain: process.env.AUTH_DOMAIN,
-  projectId: process.env.PROJECT_ID,
-  storageBucket: process.env.STORAGE_BUCKET,
-  messagingSenderId: process.env.SENDER_ID,
-  appId: process.env.APP_ID,
-  measurementId: process.env.MEASUREMENT_ID
-};
-*/
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
