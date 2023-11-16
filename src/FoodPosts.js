@@ -10,6 +10,7 @@ const FoodPost = () => {
     const [newTitle, setTitle] = useState('');
     const [newImage, setImage] = useState('');
     const [newText, setText] = useState('');
+    const [newVeg, setVeg] = useState(false);
 
     const getPostList = async () => {
         try{
@@ -34,6 +35,7 @@ const FoodPost = () => {
             title: newTitle, 
             text: newText, 
             image: newImage,
+            veg: newVeg,
           });
           getPostList();
         }catch(err){
@@ -43,11 +45,10 @@ const FoodPost = () => {
 
     return(
         <div>
-            <div>
-                <input type="text" placeholder="Title....." onChange={(e) => {console.log(e.target.value);}}/>
-                <input type="text" placeholder="Text...."/>
-                <input type="text" placeholder="Image"/>
-                <input type="checkbox"/>
+            <div><input type="text" placeholder="Title" value={newTitle} onChange={(e) => setTitle(e.target.value)} />
+                <input type="text" placeholder="Text" value={newText} onChange={(e) => setText(e.target.value)} />
+                <input type="text" placeholder="Image" value={newImage} onChange={(e) => setImage(e.target.value)} />
+                <input type="checkbox" checked={newVeg} onChange={(e) => setVeg(e.target.checked)} />
                 <label>Veg</label>
                 <button onClick={onSubmitPost}>Submit Post</button>
             </div>
