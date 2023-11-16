@@ -39,14 +39,14 @@ const FoodPost = () => {
         }catch(err){
           console.error(err);
         }
-    }    
+    }   
 
     return(
         <div>
             <div>
-                <input type="text" placeholder="Title....." onChange={(e) => {console.log(e.target.value);}}/>
-                <input type="text" placeholder="Text...."/>
-                <input type="text" placeholder="Image"/>
+                <input type="text" placeholder="Title....." onChange={(e) => {setTitle(e.target.value)}}/>
+                <input type="text" placeholder="Text...." onChange={(e) => {setText(e.target.value)}}/>
+                <input type="text" placeholder="Image" onChange={(e) => (setImage(e.target.value))}/>
                 <input type="checkbox"/>
                 <label>Veg</label>
                 <button onClick={onSubmitPost}>Submit Post</button>
@@ -64,4 +64,16 @@ const FoodPost = () => {
     );
 };
 
+
+/*
+            <div>
+                {postList.map((post, index) => (
+                    <div key={index}>
+                        <h1>{post.title}</h1>
+                        <img src={post.image} width="100" height="100"></img>
+                        <p>{post.text}</p>
+                    </div>
+                ))}
+            </div>
+            <button onClick={onSubmitPost}>Submit Post</button>*/
 export default FoodPost;
