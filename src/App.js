@@ -55,7 +55,3 @@ const App = () => {
 };
 
 export default App;
-
-/*<input placeholder = "Image...." value={newImage} onChange={(e) => setImage(e.target.value)}/>
-            <input placeholder = "Title..." value={newTitle} onChange={(e) => setTitle(e.target.value)}/>
-            <input placeholder = "Text....." value={newText} onChange={(e) => setText(e.target.value)}/> */
