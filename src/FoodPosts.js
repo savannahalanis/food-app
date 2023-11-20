@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { db } from './Firebase.js'
-import {getDocs, collection, addDoc} from 'firebase/firestore'
+import {getDocs, collection, addDoc, deleteDoc, doc, serverTimestamp} from 'firebase/firestore'
 
 const FoodPost = () => {
     const [postList, setPostList] = useState([]);
@@ -10,9 +10,9 @@ const FoodPost = () => {
     const [newTitle, setTitle] = useState('');
     const [newImage, setImage] = useState('');
     const [newText, setText] = useState('');
-    const [newVeg, setVeg] = useState(false);
+    const [newDate, setDate] = useState(null);
 
-    const getPostList = async () => {
+    const getPostList = async () => { //function returns a promise
         try{
           const data = await getDocs(postCollectionRef);
           const filteredData = data.docs.map((doc) => ({
@@ -24,10 +24,16 @@ const FoodPost = () => {
         } catch (err) {
           console.error(err);
         };
-      }
-      useEffect(() => {
+    };
+
+    useEffect(() => {
         getPostList();
-      }, [])
+    }, [])
+
+    const deletePost = async(id) => {
+        const postDoc = doc(db, "Food_Post", id)
+        await deleteDoc(postDoc);
+    }
 
     const onSubmitPost = async () => {
         try{
@@ -35,21 +41,20 @@ const FoodPost = () => {
             title: newTitle, 
             text: newText, 
             image: newImage,
-            veg: newVeg,
+            date: serverTimestamp(),
           });
           getPostList();
         }catch(err){
           console.error(err);
         }
-    }    
+    };   
 
     return(
         <div>
-            <div><input type="text" placeholder="Title" value={newTitle} onChange={(e) => setTitle(e.target.value)} />
-                <input type="text" placeholder="Text" value={newText} onChange={(e) => setText(e.target.value)} />
-                <input type="text" placeholder="Image" value={newImage} onChange={(e) => setImage(e.target.value)} />
-                <input type="checkbox" checked={newVeg} onChange={(e) => setVeg(e.target.checked)} />
-                <label>Veg</label>
+            <div>
+                <input type="text" placeholder="Title....." onChange={(e) => {setTitle(e.target.value)}}/>
+                <input type="text" placeholder="Text...." onChange={(e) => {setText(e.target.value)}}/>
+                <input type="text" placeholder="Image" onChange={(e) => (setImage(e.target.value))}/>
                 <button onClick={onSubmitPost}>Submit Post</button>
             </div>
             <div>
@@ -58,6 +63,8 @@ const FoodPost = () => {
                         <h1>{post.title}</h1>
                         <img src={post.image} width="100" height="100"></img>
                         <p>{post.text}</p>
+                        <button onClick={() => deletePost(post.id)}>Delete Post</button>
+
                     </div>
                 ))}
             </div>
