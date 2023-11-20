@@ -1,0 +1,54 @@
+.center {
+   display: flex;
+   justify-content: center;
+ }
+
+ .right{
+   justify-content:right;
+ }
+
+ .container {
+   display: flex;
+   flex-direction: column
+ }
+
+ .rowcontainer {
+   display: flex;
+   flex-direction: row
+ }
+
+.leftmargin{
+   margin-left:7px;
+}
+
+.bottommargin{
+   margin-bottom: 15px;
+}
+
+.topmargin{
+   margin-top: 7px;
+}
+
+
+.column {
+   float: left;
+}
+ 
+.left {
+   width: 25%;
+}
+
+.right {
+   width: 5%;
+}
+ 
+.middle {
+   width: 50%;
+}
+
+
+.row:after {
+   content: "";
+   display: table;
+   clear: both;
+ }
