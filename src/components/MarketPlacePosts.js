@@ -15,7 +15,7 @@ const listing =
         restaurant: 'Epicuria',
         title: 'NEED SWIPES',
         subtitle: 'PLEASEE',
-        type: 'selling'
+        type: 'buying'
     }
   
 
@@ -23,6 +23,7 @@ export default function MarketPlacePosts() {
     return(
         <div>
             <ul>
+          {/*use map function here to map information onto posts */}
                 <Post listing = {listing}/>
                 <Post listing = {listing}/>
                 <Post listing = {listing}/>
@@ -38,12 +39,7 @@ function Post ({listing}) {
     <Card className = "card">
     <CardContent>
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs={1.5}>
-            <Avatar
-              src={listing.profileImage}
-              sx={{ width: 56, height: 56 }}
-            />
-          </Grid>
+         
           <Grid item xs={8}>
             <Typography variant="subtitle1" noWrap>
               {listing.username}
@@ -55,9 +51,9 @@ function Post ({listing}) {
           <Grid item xs = {2}>
           <Box
             sx={{
-              width: 70,
-              height: 30,
-              backgroundColor: listing.type === 'buying' ? 'green' : 'blue',
+              width: 80,
+              height: 40,
+              backgroundColor: listing.type === 'buying' ? 'green' : '#2D68C4',
               color: 'white',
               display: 'flex',
               justifyContent: 'center',

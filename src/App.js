@@ -28,7 +28,7 @@ function App() {
               ChewCLA
             </Typography>
             <Typography variant="body1" align="center">
-              <Link to="./test">
+              <Link to="./home">
                 <Button variant="contained" sx={{color: "white"}} >Login</Button>
               </Link>
             </Typography>

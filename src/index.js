@@ -14,6 +14,7 @@ import Home from './pages/Home'
 import Post from './pages/Post'
 import UserPage from './pages/UserPage';
 import OtherUserPage from './pages/OtherUserPage';
+import HomeAdd from './pages/HomePageAdd';
 
 
 const theme = createTheme({
@@ -47,6 +48,7 @@ root.render(
           <Route path = "/marketplace" element={<Marketplace />}/>
           <Route path = "/marketplaceadd" element={<MarketplaceAdd />}/>
           <Route path = "/home" element={<Home  />}/>
+          <Route path = "/homeadd" element={<HomeAdd />}/>
           <Route path = "/post" element={<Post />}/>
           <Route path = "/userpage" element={<UserPage />}/>
           <Route path = "/otheruserpage" element={<OtherUserPage />}/>

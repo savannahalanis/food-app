@@ -3,6 +3,8 @@ import "../components/Home.css";
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
+import { Grid, Paper, Typography } from '@mui/material';
+import Navbar from "../components/Navbar"
 
 function Name({name})
 {
@@ -34,40 +36,67 @@ function Posts() {
   );
 }
 
+function NumPosts({numPosts})
+{
+  return(
+    <div align="center">
+     <Typography variant="h5">{numPosts}</Typography>
+    <Typography variant="h5">Posts</Typography>
+    </div>
+  )
+}
+
 function Followers({followercount})
 {
   return(
-    <>
-    <h1>Followers:</h1>
-    <h1>{followercount}</h1>
-    </>
+   <div align="center">
+   <Typography variant="h5">{followercount}</Typography>
+  <Typography variant="h5">Followers</Typography>
+  </div>
   )
 }
 
 function Following({followingcount})
 {
   return(
-    <>
-    <h1>Following:</h1>
-    <h1>{followingcount}</h1>
-    </>
+   <div align="center">
+   <Typography variant="h5">{followingcount}</Typography>
+  <Typography variant="h5">Following</Typography>
+  </div>
   )
 }
 
 
 export default function UserPage() {
    return (
-     <>
-     <Name name="April"/>
-    <div class = "center rowcontainer">
-      <Followers followercount="0"></Followers>
-      &nbsp; &nbsp; &nbsp;
-      <Following followingcount="0"></Following>
+      <>
+      <Navbar></Navbar>
+      <div style={{ padding: 20 }}>
+
+      <Grid container spacing={2} class = "center rowcontainer" >
+         <Grid item xs={2}>
+            <Typography variant="h6" align="left">
+               <Name name="April Sun" />
+            </Typography>
+         </Grid>
+         <Grid item xs={1} sx={{marginTop:"20px"}}>
+         <NumPosts numPosts="2" />
+        </Grid>
+        <Grid item xs={1} sx={{marginTop:"20px"}}>
+         <Followers followercount="0" />
+        </Grid>
+        <Grid item xs={1} sx={{marginTop:"20px"}}>
+         <Following followingcount="0" />
+        </Grid>
+      </Grid>
+
+      
+      
+      <Grid container spacing={2} class = "center rowcontainer">
+         <Posts />
+      </Grid>
     </div>
-    <div class = "center">
-     <Posts></Posts>
-     </div>
-     </>
+    </>
    )
 }
 

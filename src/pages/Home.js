@@ -10,6 +10,7 @@ import Button from '@mui/material/Button';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
+import { Link } from 'react-router-dom';
 
 //code from https://javascript.works-hub.com/learn/building-a-modular-infinite-scroll-252dd
 let page = 1;
@@ -46,7 +47,7 @@ function Posts() {
             {items.map((user) => (
                <>
                   <img src={user.url} height="650px" width="650px" /> {/*where the images are displayed*/}
-                  <h1>omg i love food so much</h1>
+                  <h1>omg i love food so much!!</h1>
                </>
             ))}
          </div>
@@ -149,6 +150,8 @@ function PostButton() {
 
    return (
       <div>
+         <Link to="/homeadd">
+         
          <button style={{
             color: "#2D68C4", backgroundColor: `${bgColour}`,
             width: "250px", height: "60px", fontSize: "20px", borderRadius: "5px", border: "solid gray"
@@ -158,6 +161,7 @@ function PostButton() {
          >
             New Post
          </button>
+         </Link>
       </div>
    );
 }

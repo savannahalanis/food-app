@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Button, Typography } from "@mui/material";
 import "./Navbar.css";
+import { Link } from "react-router-dom";
 import Logo from "../static/logo2.png"
 
 
@@ -45,19 +46,9 @@ function NavBar() {
                 Marketplace
               </NavLink>
             </li>
-            <li className="nav-item">
-              <NavLink
-                exact
-                to="/settings"
-                activeClassName="active"
-                className="nav-links"
-                onClick={handleClick}
-              >
-                Settings
-              </NavLink>
-            </li>
+          
            {
-            auth ?  ( <Button 
+            auth ?  ( <Link to="/signup"  onClick={() => setAuth(!auth)} ><Button 
             variant="contained" 
             sx={{color: "white", marginRight: '1rem',  border: '1px solid #2D68C4',
               '&:hover': {
@@ -65,11 +56,13 @@ function NavBar() {
                 border: '1px solid #5B97F4'
               }
             }}
-            onClick={() => setAuth(!auth)} 
+             
             >
               Logout
             </Button> 
+            </Link>
             ):(
+              <Link to="/login"  onClick={() => setAuth(!auth)}>
               <Button 
               variant="contained" 
               sx={{color: "white", marginRight: '1rem',  border: '1px solid #2D68C4',
@@ -78,10 +71,11 @@ function NavBar() {
                   border: '1px solid #5B97F4'
                 }
               }}
-              onClick={() => setAuth(!auth)} 
+                
               >
                 Login
               </Button>
+              </Link>
            )
            }
           

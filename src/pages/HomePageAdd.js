@@ -4,12 +4,18 @@ import "../components/Card.css";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'; 
 import { Link } from "react-router-dom";
 
-export default function MarketplaceAdd() {
+export default function HomeAdd() {
+
+    const handleFileChange = (event) => {
+        // Access the selected file with `event.target.files[0]`
+        const file = event.target.files[0];
+        console.log(file); // You can handle the file upload process here
+    };
   return (
     <>
       <Navbar />
       <div style={{ position: 'relative', width: '100%' }}>
-      <Link to ="/marketplace">
+      <Link to ="/home">
         <Button 
           variant="contained" 
           startIcon={<ArrowBackIcon />} 
@@ -24,30 +30,7 @@ export default function MarketplaceAdd() {
           <CardContent>
             <Grid container spacing={3}>
               <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
-                <Typography variant = "h3">Add New Posting</Typography>
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <InputLabel >Restaurant</InputLabel>
-                <TextField
-                  fullWidth
-                  id="restaurant"
-                  variant="standard"
-                  required
-                />
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <InputLabel >Price per Swipe</InputLabel>
-                <TextField
-                  fullWidth
-                  id="price"
-                  variant="standard"
-                  required
-                  InputProps={{
-                    startAdornment: <Typography>$</Typography>
-                  }}
-                />
+                <Typography variant = "h3">Create New Post</Typography>
               </Grid>
 
               <Grid item xs={12} sm={6}>
@@ -61,35 +44,34 @@ export default function MarketplaceAdd() {
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <InputLabel >Additional Text</InputLabel>
+                <InputLabel >Subtitle</InputLabel>
                 <TextField
                   fullWidth
-                  id="additional-text"
-                  variant="standard"
-                />
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <InputLabel >Time</InputLabel>
-                <TextField
-                  fullWidth
-                  id="time"
+                  id="subtitle"
                   variant="standard"
                   required
                 />
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <InputLabel >Contact Information</InputLabel>
-                <TextField
-                  fullWidth
-                  id="contact"
-                  variant="standard"
-                  required
-                />
+                <InputLabel >Choose Image</InputLabel>
+                <input
+                accept="image/*" 
+                style={{ display: 'none' }}
+                id="raised-button-file"
+                multiple
+                type="file"
+                onChange={handleFileChange}
+             />
+                <label htmlFor="raised-button-file">
+                    <Button variant="contained" component="span" sx={{color:"white"}}>
+                        Upload
+                    </Button>
+                </label>
               </Grid>
+
               <Grid item xs ={6}>
-                <Button variant = "contained" sx={{color:"white"}}>Submit</Button>
+                <Button variant = "contained" sx={{color:"white", marginTop:"2em"}}>Submit</Button>
               </Grid>
             </Grid>
           </CardContent>
