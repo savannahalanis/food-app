@@ -11,7 +11,6 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Home from './pages/Home'
-import Post from './pages/Post'
 import UserPage from './pages/UserPage';
 import OtherUserPage from './pages/OtherUserPage';
 import HomeAdd from './pages/HomePageAdd';
@@ -49,7 +48,6 @@ root.render(
           <Route path = "/marketplaceadd" element={<MarketplaceAdd />}/>
           <Route path = "/home" element={<Home  />}/>
           <Route path = "/homeadd" element={<HomeAdd />}/>
-          <Route path = "/post" element={<Post />}/>
           <Route path = "/userpage" element={<UserPage />}/>
           <Route path = "/otheruserpage" element={<OtherUserPage />}/>
         </Routes>

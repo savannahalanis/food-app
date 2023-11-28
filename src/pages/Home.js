@@ -6,17 +6,21 @@ import { useState, useEffect, useRef } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component';
 import axios from "axios";
 import "../components/Home.css";
-import Button from '@mui/material/Button';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 import { Link } from 'react-router-dom';
+import Post from '../components/Post.js'
+import EggIcon from '@mui/icons-material/Egg';
+import EggAltIcon from '@mui/icons-material/EggAlt';
+import Rating from '@mui/material/Rating';
+import { styled } from '@mui/material/styles';
 
-//code from https://javascript.works-hub.com/learn/building-a-modular-infinite-scroll-252dd
+//code adapted from https://javascript.works-hub.com/learn/building-a-modular-infinite-scroll-252dd
 let page = 1;
 const fetchData = (setItems, items) => {
    axios
-      .get(`https://jsonplaceholder.typicode.com/photos?_page=${page}&_limit=10`) //fake API
+      .get(`https://jsonplaceholder.typicode.com/photos?_page=${page}&_limit=10`) //fake API. basically, there are user objects with an albumId, id, title, url, thumbnailurl.
       .then((res) => {
          setItems([...items, ...res.data]); //adding what fetched to array
          page = page + 1;
@@ -39,23 +43,20 @@ function Posts() {
          loader={<h4>Loading...</h4>}
          endMessage={
             <p style={{ textAlign: "center" }}>
-               <b>Yay! You have seen it all</b>
+               <b>end</b>
             </p>
          }
       >
          <div style={{ minHeight: "100vh" }}>
             {items.map((user) => (
-               <>
-                  <img src={user.url} height="650px" width="650px" /> {/*where the images are displayed*/}
-                  <h1>omg i love food so much!!</h1>
-               </>
+               <Post user={user}></Post>
             ))}
          </div>
       </InfiniteScroll>
    );
 }
 
-function SearchBar() {
+function SearchBar() { {/*TODO: load userpage when search input matches*/}
    return (
       <Box
          component="form"
@@ -65,12 +66,12 @@ function SearchBar() {
          noValidate
          autoComplete="off"
       >
-         <TextField id="outlined-basic" label="Search friends and food!" variant="outlined" inputProps={{ style: { fontSize: 25 } }} />
+         <TextField id="outlined-basic" label="Search friends!" variant="outlined" inputProps={{ style: { fontSize: 25 } }} />
       </Box>
    );
 }
 
-function Toggle() {
+function Toggle() { {/*TODO: reshow posts onclick*/}
    const [buttonText, setButtonText] = useState('Posts From Friends');
    const [bgColour, setBgColour] = useState("#FFFFFF");
 
@@ -94,7 +95,16 @@ function Toggle() {
    );
 }
 
-function Reviews() {
+const StyledRating = styled(Rating)({
+   '& .MuiRating-iconFilled': {
+     color: '#808080',
+   },
+   '& .MuiRating-iconHover': {
+     color: '#FFCC5F',
+   },
+ });
+
+function Reviews() { {/*TODO: map actual data*/}
    return (
       <>
          <ImageList sx={{ width: 300, height: 750 }} cols="1" >
@@ -110,6 +120,14 @@ function Reviews() {
                      title={item.title}
                      subtitle={item.author}
                      position="below"
+                  />
+                  <StyledRating
+                     name="customized-color"
+                     defaultValue={0}
+                     getLabelText={(value) => `${value} Egg${value !== 1 ? 's' : ''}`}
+                     precision={1}
+                     icon={<EggAltIcon fontSize="inherit" />}
+                     emptyIcon={<EggIcon fontSize="inherit" />}
                   />
                </ImageListItem>
             ))}
@@ -151,16 +169,16 @@ function PostButton() {
    return (
       <div>
          <Link to="/homeadd">
-         
-         <button style={{
-            color: "#2D68C4", backgroundColor: `${bgColour}`,
-            width: "250px", height: "60px", fontSize: "20px", borderRadius: "5px", border: "solid gray"
-         }}
-            onMouseEnter={() => setBgColour("#ADD8E6")}
-            onMouseLeave={() => setBgColour("#FFFFFF")}
-         >
-            New Post
-         </button>
+
+            <button style={{
+               color: "#2D68C4", backgroundColor: `${bgColour}`,
+               width: "250px", height: "60px", fontSize: "20px", borderRadius: "5px", border: "solid gray"
+            }}
+               onMouseEnter={() => setBgColour("#ADD8E6")}
+               onMouseLeave={() => setBgColour("#FFFFFF")}
+            >
+               New Post
+            </button>
          </Link>
       </div>
    );
@@ -185,8 +203,8 @@ export default function HomePage() {
                   </div>
                </div>
                <div className='center'>
-                     <Posts></Posts>
-                  </div>
+                  <Posts></Posts>
+               </div>
             </div>
             <div class="column right">
                <Reviews></Reviews>

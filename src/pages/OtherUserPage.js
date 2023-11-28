@@ -117,6 +117,9 @@ export default function OtherUserPage() {
       </Grid>
 
       <Grid container spacing={2} class = "center rowcontainer">
+         <Follow></Follow>
+      </Grid>
+      <Grid container spacing={2} class = "center rowcontainer">
          <Posts />
       </Grid>
     </div>

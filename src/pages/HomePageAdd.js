@@ -54,6 +54,26 @@ export default function HomeAdd() {
               </Grid>
 
               <Grid item xs={12} sm={6}>
+                <InputLabel >Location</InputLabel>
+                <TextField
+                  fullWidth
+                  id="location"
+                  variant="standard"
+                  required
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <InputLabel >Dietary Restrictions</InputLabel>
+                <TextField
+                  fullWidth
+                  id="restrictions"
+                  variant="standard"
+                  required
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
                 <InputLabel >Choose Image</InputLabel>
                 <input
                 accept="image/*" 
