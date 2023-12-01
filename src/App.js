@@ -2,19 +2,63 @@ import './App.css';
 import './Firebase.js';
 import FoodPost from './FoodPosts.js';
 
-import React, { useEffect, useState } from 'react';
-import { signInWithGoogle } from './Firebase.js';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
+import React, { useEffect, useState } from 'react';
+import { getAuth, getAdditionalUserInfo, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { getDocs, addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { db } from './Firebase.js'
 
 const App = () => {
+  const [userList, setUserList] = useState([]);
   const [user, setUser] = useState(null);
-  
+  const usersCollectionRef = collection(db, 'Users');
+
+  const getUserList = async () => {
+    const data = await getDocs(usersCollectionRef);
+    const filteredData = data.docs.map((doc) => ({...doc.data(), id: doc.id}));
+    setUserList(filteredData)
+  };
+
+  useEffect(() => {
+    getUserList();
+  }, [])
+  const addUser = async (user) => {
+    getUserList();
+    const currentUsers = userList.filter(u => u.email === user.email);
+    console.log(currentUsers);
+    if (currentUsers.length == 0){
+      console.log("Here")
+      const userDocument = {
+          uid: user.uid,
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+          createdAt: serverTimestamp(),
+          friends:[],
+      };
+
+      try {
+          await addDoc(usersCollectionRef, userDocument);
+          getUserList();
+          console.log('User added to Firestore');
+      } catch (error) {
+          console.error('Error adding user to Firestore', error);
+      }
+    }
+  };
+
   const handleSignIn = async () => {
+    console.log("Here");
     try {
-      const result = await signInWithGoogle();
+      const result = await signInWithPopup(auth, new GoogleAuthProvider());
       const user = result.user;
+      const { isNewUser } = getAdditionalUserInfo(result)    
+      console.log("New: ")
+      console.log(isNewUser);
       setUser(user);
+      if(isNewUser){
+        addUser(user);
+      }
     } catch (error) {
       console.error('Error signing in:', error);
     }
@@ -27,8 +71,7 @@ const App = () => {
       console.error('Error signing out:', error);
     });
   };
-
-  // Listen for changes in authentication state
+  
   onAuthStateChanged(auth, (user) => {
     if (user) {
       setUser(user);
