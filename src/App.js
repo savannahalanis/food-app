@@ -1,6 +1,7 @@
 import './App.css';
 import './Firebase.js';
 import FoodPost from './FoodPosts.js';
+import MarketplacePost from './MarketplacePosts.js'
 
 
 import React, { useEffect, useState } from 'react';
@@ -89,6 +90,7 @@ const App = () => {
           <p>Email: {user.email}</p>
           <button onClick={handleSignOut}>Sign Out</button>
           <FoodPost/>
+          <MarketplacePost/>
         </div>
       ) : (
         <button onClick={handleSignIn}>Sign in with Google</button>
