@@ -1,4 +1,6 @@
 import * as React from 'react';
+import {db} from '../Firebase.js'
+import {collection, getDocs, doc} from 'firebase/firestore'
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Navbar from "../components/Navbar";
@@ -26,6 +28,7 @@ const fetchData = (setItems, items) => {
          page = page + 1;
       });
 };
+
 
 function Posts() {
    const [items, setItems] = useState([]);
