@@ -6,12 +6,13 @@ import MarketplacePost from './MarketplacePosts.js'
 
 import React, { useEffect, useState } from 'react';
 import { getAuth, getAdditionalUserInfo, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { getDocs, addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { getDocs, addDoc, collection, serverTimestamp, query, where } from 'firebase/firestore';
 import { db } from './Firebase.js'
 
 const App = () => {
   const [userList, setUserList] = useState([]);
   const [user, setUser] = useState(null);
+  const [userDocID, setUserDocID] =  useState(null);
   const usersCollectionRef = collection(db, 'Users');
 
   const getUserList = async () => {
@@ -48,6 +49,17 @@ const App = () => {
     }
   };
 
+  const getUserDocID= async (uid) => {
+    const querySnapshot = await getDocs(query(collection(db, "Users"), where("uid", "==", uid)));
+    if(!querySnapshot) {
+      console.log("nothing in getUserDocID() snapshot")
+      return;
+    }
+    const id = querySnapshot.docs[0].id;
+    setUserDocID(id);
+    return;
+  };
+
   const handleSignIn = async () => {
     console.log("Here");
     try {
@@ -60,10 +72,12 @@ const App = () => {
       if(isNewUser){
         addUser(user);
       }
+      getUserDocID(user.uid)
     } catch (error) {
       console.error('Error signing in:', error);
     }
   };
+
   const auth = getAuth();
   const handleSignOut = () => {  
     auth.signOut().then(() => {
@@ -90,7 +104,7 @@ const App = () => {
           <p>Email: {user.email}</p>
           <button onClick={handleSignOut}>Sign Out</button>
           <FoodPost/>
-          <MarketplacePost/>
+          <MarketplacePost userID = {userDocID}/>
         </div>
       ) : (
         <button onClick={handleSignIn}>Sign in with Google</button>
