@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { db } from './Firebase.js'
-import {getDocs, collection, addDoc, deleteDoc, updateDoc, doc, serverTimestamp} from 'firebase/firestore'
+import {getDocs, collection, addDoc, deleteDoc, updateDoc, doc, serverTimestamp, Timestamp, orderBy, query, where, direction} from 'firebase/firestore'
 // TODO: update contact information to grab from user
 // TODO: update hours to select hours
 // TOOD: update user to automatically be a user
@@ -9,6 +9,7 @@ import {getDocs, collection, addDoc, deleteDoc, updateDoc, doc, serverTimestamp}
 
 const MarketplacePost = () => {
     const [marketplaceList, setMarketplaceList] = useState([]);
+    const [filterBy, setFilterBy] = useState("date")
     const marketplaceCollectionRef = collection(db, "Selling_Post")
 
     // NEW POST STATES
@@ -21,16 +22,35 @@ const MarketplacePost = () => {
     // idk abt this one
     const [newLocations, setLocations] = useState('');
     const [newDate, setDate] = useState('');
-    
-    const getMarketplaceList = async() => {
-        const data = await getDocs(marketplaceCollectionRef);
-        const filteredData = data.docs.map((doc) => ({...doc.data(), id: doc.id}));
-        setMarketplaceList(filteredData)
-    }
+
+    const getMarketplaceList = async () => {        
+        try {  
+            const data = await getDocs(query(collection(db, "Selling_Post"), where("date", ">=", currentDate()), orderBy(filterBy)));
+            const filteredData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+            setMarketplaceList(filteredData);
+        } catch (error) {
+            console.error('Error fetching marketplace data:', error);
+        }
+    };
 
     useEffect(() => {
         getMarketplaceList();
-    }, [])
+    }, []);
+
+    const handleFilter = () => {
+        console.log('Search button clicked with filter:', filterBy);
+        if (filterBy === 'date') {
+            /*
+            console.log("date hit again")
+            const sortedByDate = [...marketplaceList].sort((a, b) => new Date(a.date) - new Date(b.date));
+            setMarketplaceList(sortedByDate);
+            */
+            getMarketplaceList();
+        } else if (filterBy === 'price') {
+            const sortedByPrice = [...marketplaceList].sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+            setMarketplaceList(sortedByPrice);
+        }
+    };
 
     const onSubmitMarketplacePost = async () => {
         try{
@@ -43,8 +63,7 @@ const MarketplacePost = () => {
                 alert("Price must have 2 decimals and nonnegative ")
                 return;
             }
-
-            
+      
             function removeTrailingZeros(numberString) {
                 console.log(typeof numberString)
                 console.log("hit function")
@@ -82,8 +101,12 @@ const MarketplacePost = () => {
                 endHour: newEndHour,
                 price: removeTrailingZeros(newPrice),
                 user: newUser,
-                date: currentDate()
+                date: Timestamp.fromDate(new Date())
             });
+
+            // reload page to (temporarily??) fix issue that "where" and first "orderBy" must be same type
+            window.location.reload(false);
+
             getMarketplaceList();
         }catch(err){
             console.error(err)
@@ -91,21 +114,24 @@ const MarketplacePost = () => {
     }
 
     function currentDate() {
-        const today = new Date();
-        const month = today.getMonth()+1;
-        const year = today.getFullYear();
-        const date = today.getDate();
-        const formattedDate = month + "/" + date + "/" + year;
-        return formattedDate
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0); 
+        const currentDateTimestamp = Timestamp.fromDate(currentDate);
+        console.log(currentDateTimestamp.toDate());
+        return currentDateTimestamp;        
     }
-
-    // const filteredMarketplace = markeplaceList.filter();
-
 
     return(
         <div>
             <div>
                 <h1>Marketplace Post</h1>
+            </div>
+            <div>
+                <select value={filterBy} onChange={(e => {setFilterBy(e.target.value)})}>
+                    <option value="date">Date</option>
+                    <option value="price">Price</option>
+                </select>
+                <button onClick={handleFilter}>Search</button>
             </div>
             <div>
                 <h2>Submit a Marketplace Post</h2>
@@ -115,9 +141,6 @@ const MarketplacePost = () => {
                 <input type="time" required placeholder="End Hour" onChange={(e) => {setEndHour(e.target.value)}}/>
                 <input type="number" required placeholder="Price" pattern="^\d*(\.\d{0,2})?$" onChange={(e) => {setPrice(e.target.value)}}/>
                 <input type="text" required placeholder="User ID" onChange={(e) => {setUser(e.target.value)}}/>
-
-                {/* <input type="date" required min={new Date().toISOString().split("T")[0]} placeholder="Day Available" onChange={(e) => {setDate(e.target.value)}}/> --> */}
-                
                 <button onClick={onSubmitMarketplacePost}>Submit Marketplace Post</button>
             </div>
             <div>
@@ -129,7 +152,12 @@ const MarketplacePost = () => {
                             contact info ({post.contactType}) = {post.contactInfo}<br />
                             from time {post.startHour}-{post.endHour}<br />
                             at ${post.price} <br />
-                            {post.date}
+                        {post.date && (
+                            <span>
+                                Date: {post.date.toDate().toLocaleDateString()} 
+                                {/* Assuming post.date is a Timestamp object */}
+                            </span>
+                        )}
                         </p>
                     </div>
                 )}
