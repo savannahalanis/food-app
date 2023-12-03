@@ -1,3 +1,8 @@
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import {useEffect, useState} from 'react'
 import {db, storage} from '../Firebase.js'
 import {ref, uploadBytesResumable, listAll, getDownloadURL} from 'firebase/storage';
@@ -7,7 +12,6 @@ import { Card, CardContent, Grid, TextField, Typography, InputLabel, Button } fr
 import "../components/Card.css"; 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'; 
 import { Link } from "react-router-dom";
-import { ListAltOutlined, SetMealOutlined } from '@mui/icons-material';
 import {v4} from 'uuid';
 
 export default function HomeAdd() {
@@ -16,13 +20,13 @@ export default function HomeAdd() {
 
   //NEW POST STATES
   const [newTitle, setTitle] = useState('');
-  const [newImage, setImage] = useState('');
   const [newText, setText] = useState('');
   const [newDate, setDate] = useState(null);
+  const [newLocation, setLocation] = useState('');
   const [newVeg, setVeg] = useState(false);
   const [newLikes, setLikes] = useState(0);
   const [imageUpload, setImageUpload] = useState(null);
-  const [imageList, setImageList] = useState([]);
+  
 
   const [searchQuery, setSearchQuery] = useState('');
   const [findVeg, setFindVeg] = useState(false);
@@ -35,23 +39,13 @@ export default function HomeAdd() {
     setPostList(filteredData)
   };
 
+  const handleLocation = (event) => {
+    setLocation(event.target.value);
+  };
+
   useEffect(() => {
     getPostList();
   }, []);
-
-  const deletePost = async(id) => {
-    const postDoc = doc(db, "Food_Post", id)
-    await deleteDoc(postDoc);
-    setPostList((oldPostList) => oldPostList.filter((post) => post.id !== id));
-  }
-
-  const likePost = async(id) => {
-    const postDoc = doc(db, "Food_Post", id)
-    const posts = postList.map((post) =>
-    post.id === id ? { ...post, likes: post.likes + 1 } : post);
-    await updateDoc(postDoc, {likes: postList.find(post => post.id === id).likes + 1});
-    setPostList(posts);
-  }
 
   const onSubmitPost = async () => {
       try{
@@ -63,6 +57,7 @@ export default function HomeAdd() {
             text: newText, 
             image: imageURL,
             date: serverTimestamp(),
+            location: newLocation,
             veg: newVeg,
             likes: newLikes,
             comments: {}
@@ -94,7 +89,6 @@ export default function HomeAdd() {
         </Button>
         </Link>
       </div>
-      <div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
         <Card className="card" sx={{ maxWidth: 600, margin: 'auto', mt: 2 }}>
           <CardContent>
@@ -114,8 +108,16 @@ export default function HomeAdd() {
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <InputLabel >Location</InputLabel>
-                <TextField fullWidth id="subtitle" variant="standard" required/>
+                <Box sx={{ minWidth: 100 }}>
+                    <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">Location</InputLabel>
+                    <Select labelId="demo-simple-select-label" id="demo-simple-select" value={newLocation} label="Location" onChange={handleLocation}>
+                      <MenuItem value={"DeNeve"}>DeNeve</MenuItem>
+                      <MenuItem value={"B-Plate"}>B-Plate</MenuItem>
+                      <MenuItem value={"Epicuria"}>Epicuria</MenuItem>
+                    </Select>
+                    </FormControl>
+               </Box>
               </Grid>
 
               <Grid item xs={12} sm={6}>
@@ -137,19 +139,6 @@ export default function HomeAdd() {
             </Grid>
           </CardContent>
         </Card>
-      </div>
-      <div>
-                {filteredPosts.map((post, index) => (
-                    <div key={index}>
-                        <h1>{post.title}</h1>
-                        <img src={post.image} width="200" height="200"></img>
-                        <p>{post.text}</p>
-                        <button onClick={() => deletePost(post.id)}>Delete Post</button>
-                        <button onClick={() => likePost(post.id)}>Like</button>
-                        <p>{post.likes}</p>
-                    </div>
-                ))}
-            </div>
       </div>
     </>
     
