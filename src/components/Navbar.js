@@ -4,7 +4,7 @@ import { Button, Typography } from "@mui/material";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
 import Logo from "../static/logo2.png"
-
+import "../App.css";
 
 
 function NavBar() {
@@ -31,6 +31,7 @@ function NavBar() {
                 activeClassName="active"
                 className="nav-links"
                 onClick={handleClick}
+                style={{ fontFamily: 'InstagramSans' }}
               >
                 Home
               </NavLink>
@@ -42,6 +43,7 @@ function NavBar() {
                 activeClassName="active"
                 className="nav-links"
                 onClick={handleClick}
+                style={{ fontFamily: 'InstagramSans' }}
               >
                 Marketplace
               </NavLink>

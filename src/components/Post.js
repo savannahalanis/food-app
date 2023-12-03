@@ -7,6 +7,7 @@ import LocalDiningIcon from '@mui/icons-material/LocalDining';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
+import { Typography } from '@mui/material';
 
 function LikeButton() {
    const [liked, setLiked] = useState(false)
@@ -38,15 +39,15 @@ export const Post = ({user}) => {
 
    return(
       <>
-         <h1>username</h1> <br /> {/*TODO: pass in value*/}
+         <Typography variant = "h3">username</Typography> <br /> {/*TODO: pass in value*/}
          <img src={user.image} height="500px" width="500px" /> <br />
          <div className="rowcontainer">
             <LikeButton></LikeButton>
             &nbsp;
             <h3>{user.likes} likes</h3>
             </div>
-         <h1>{user.title}</h1>
-         <h2>{user.text}</h2>
+         <Typography variant = "h3">{user.title}</Typography>
+         <Typography variant = "h5">{user.text}</Typography>
          <div className='rowcontainer'>
             <Button variant="outlined" disableRipple={true} color="primary" size="small" startIcon={<LocationOnIcon />}>
             Location: {/*TODO: pass in value*/}
@@ -56,7 +57,7 @@ export const Post = ({user}) => {
             Restrictions: {/*TODO: pass in value*/}
             </Button>
          </div>
-         <h2>Comments:</h2>
+         <Typography variant = "h5">Comments:</Typography>
          <TextField label="Add comment:" variant="standard" /> {/*TODO: render comment when press enter*/}
          <CommentList></CommentList>
          <h5>November 31, 3091</h5> {/*TODO: pass in value*/}

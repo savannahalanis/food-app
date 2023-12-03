@@ -8,7 +8,7 @@ export default function Marketplace() {
     return (
         <>
         <Navbar />
-        <Grid container spacing={2}> 
+        <Grid container spacing={2} sx={{backgroundColor:"#FAF9F6"}}> 
             <Grid item xs={8} md={8}> 
                 <MarketPlacePosts/> 
             </Grid>

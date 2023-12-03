@@ -1,8 +1,12 @@
 import React from 'react';
 import {Box, Grid, Typography, Button} from '@mui/material';
 import { Link } from 'react-router-dom';
-import {useTheme} from '@mui/material/styles';
+
 import Image from './static/background3.png';
+
+import './App.css';
+import { useTheme } from '@emotion/react';
+
 
 
 

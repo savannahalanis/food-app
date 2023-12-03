@@ -196,7 +196,7 @@ export default function HomePage() {
       <>
          <Navbar></Navbar>
 
-         <div class="row">
+         <div class="row" style ={{backgroundColor:"#FAF9F6"}}>
             <div class="column left">
                <SearchBar></SearchBar>
                <div class='leftmargin'>
