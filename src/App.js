@@ -1,6 +1,7 @@
 import './App.css';
 import './Firebase.js';
 import FoodPost from './FoodPosts.js';
+import Friends from './Friends.js'
 import MarketplacePost from './MarketplacePosts.js'
 
 
@@ -49,16 +50,19 @@ const App = () => {
   };
 
   const handleSignIn = async () => {
-    console.log("Here");
     try {
       const result = await signInWithPopup(auth, new GoogleAuthProvider());
       const user = result.user;
-      const { isNewUser } = getAdditionalUserInfo(result)    
-      console.log("New: ")
-      console.log(isNewUser);
-      setUser(user);
-      if(isNewUser){
-        addUser(user);
+      const { isNewUser } = getAdditionalUserInfo(result);
+  
+      if (user.email.endsWith(".edu")) {
+        setUser(user);
+        if (isNewUser) {
+          addUser(user);
+        }
+      } else {
+        console.log("Invalid email domain. Sign in with a valid 'ucla.edu' email address.");
+        auth.signOut();
       }
     } catch (error) {
       console.error('Error signing in:', error);
@@ -89,6 +93,7 @@ const App = () => {
           <p>Welcome, {user.displayName}!</p>
           <p>Email: {user.email}</p>
           <button onClick={handleSignOut}>Sign Out</button>
+          <Friends user={user}/>
           <FoodPost/>
           <MarketplacePost/>
         </div>
