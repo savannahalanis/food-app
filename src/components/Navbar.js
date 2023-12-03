@@ -48,6 +48,18 @@ function NavBar() {
                 Marketplace
               </NavLink>
             </li>
+            <li className="nav-item">
+              <NavLink
+                exact
+                to="/userpage"
+                activeClassName="active"
+                className="nav-links"
+                onClick={handleClick}
+                style={{ fontFamily: 'InstagramSans' }}
+              >
+                Profile
+              </NavLink>
+            </li>
           
            {
             auth ?  ( <Link to="/signup"  onClick={() => setAuth(!auth)} ><Button 
