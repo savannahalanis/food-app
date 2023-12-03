@@ -86,6 +86,7 @@ export const Post = ({user}) => {
          <h5>{user.date.seconds}</h5>
          <br /><br />
       </Card>
+      </>
 )}
 
 export default Post;
