@@ -84,22 +84,6 @@ const MarketplacePost = ({ userID }) => {
             }
 
             function dateToTimestamp(dateString) {
-
-                /*
-                var dashCounter = 0
-                var yearString = ""
-                for(var i = 0; i < length(dateString); i++) {
-                    if (dateString[i] === "-") {
-                        dashCounter++;
-                    } else {
-                        switch (dashCounter) {
-                            case 0 :
-
-                        }
-                    }
-                }
-                */
-
                 const currentDate = new Date(dateString);
                 currentDate.setHours(0, 0, 0, 0); 
                 const currentDateTimestamp = Timestamp.fromDate(currentDate);
@@ -151,8 +135,23 @@ const MarketplacePost = ({ userID }) => {
         }
     };
 
+    function twentyFourHourToTwelve(dateString) {
+        var [hour, minute] = dateString.split(':'); 
+        hour = parseInt(hour)
+        console.log(hour)
+        var ending = ""
+        if (parseInt(hour) < 12 ) {
+            var ending = "AM";
+        } else if (parseInt(hour) == 12 ) {
+            var ending = "PM";
+        } else {
+            hour = hour-12;
+            ending = "PM";
+        }
+        var newDateString = String(hour) + ":" + minute + " " + ending;
+        return newDateString;
 
-
+    }
 
     
     return(
@@ -185,7 +184,7 @@ const MarketplacePost = ({ userID }) => {
                             user = {post.userName}<br />
 
                             contact info ({post.contactType}) = {post.contactInfo}<br />
-                            from time {post.startHour}-{post.endHour}<br />
+                            from time {twentyFourHourToTwelve(post.startHour)} - {twentyFourHourToTwelve(post.endHour)}<br />
                             at ${post.price} <br />
                             {post.date && (
                                 <span> Date: {post.date.toDate().toLocaleDateString()} </span>
