@@ -24,8 +24,9 @@ export default function HomeAdd() {
   const [newDate, setDate] = useState(null);
   const [newLocation, setLocation] = useState('');
   const [newVeg, setVeg] = useState(false);
-  const [newLikes, setLikes] = useState(0);
+  const [newLikes, setLikes] = useState([]);
   const [imageUpload, setImageUpload] = useState(null);
+  const [user, newUser] = useState('');
   
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -53,6 +54,7 @@ export default function HomeAdd() {
         await uploadBytesResumable(imageRef, imageUpload);
         const imageURL = await getDownloadURL(imageRef)
         await addDoc(postCollectionRef, {
+            uid: "IT5",
             title: newTitle, 
             text: newText, 
             image: imageURL,
