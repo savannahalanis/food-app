@@ -11,32 +11,30 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 
-export const LikeButton = ({id}) => {
+/*export const LikeButton = ({id}) => {
    const [postList, setPosts] = useState([])
    const [liked, setLiked] = useState(false)
-
+   
    const handleLikeClick = async () => {
       const postDoc = doc(db, "Food_Post", id);
       const updatedPosts = postList.map((post) =>
         post.id === id ? { ...post, likes: post.likes + 1 } : post
       );
-  
       try {
         await updateDoc(postDoc, { likes: postList.find((post) => post.id === id).likes + 1 });
         setPosts(updatedPosts);
       } catch (error) {
         console.error('Error updating document:', error);
       }
-  
       setLiked(!liked);
-    };
+   };
 
    return (
-      <div style={{ width: "2rem" }}> {/*TODO: update like count ONCE onclick*/}
+      <div style={{ width: "2rem" }}> {/*TODO: update like count ONCE onclick}
          <Heart isActive={liked} onClick={() => handleLikeClick()} animationScale={1} style={{ marginTop: '1rem' }} />
       </div>
    );
-}
+}*/
 
 function CommentList() {
    return (
@@ -55,6 +53,30 @@ function CommentList() {
 }
 
 export const Post = ({user}) => {
+   const LikeButton = ({id}) => {
+      const [postList, setPosts] = useState([])
+      const [liked, setLiked] = useState(false)
+      
+      const handleLikeClick = async () => {
+         const postDoc = doc(db, "Food_Post", id);
+         const updatedPosts = postList.map((post) =>
+           post.id === id ? { ...post, likes: post.likes + 1 } : post
+         );
+         try {
+           await updateDoc(postDoc, { likes: postList.find((post) => post.id === id).likes + 1 });
+           setPosts(updatedPosts);
+         } catch (error) {
+           console.error('Error updating document:', error);
+         }
+         setLiked(!liked);
+      };
+      
+      return (
+         <div style={{ width: "2rem" }}> {/*TODO: update like count ONCE onclick*/}
+            <Heart isActive={liked} onClick={() => handleLikeClick()} animationScale={1} style={{ marginTop: '1rem' }} />
+         </div>
+      );
+   }
 
    return(
       <>
