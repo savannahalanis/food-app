@@ -13,7 +13,7 @@ import { db } from './Firebase.js'
 const App = () => {
   const [userList, setUserList] = useState([]);
   const [user, setUser] = useState(null);
-  const [userDocID, setUserDocID] =  useState(null);
+  const [userID, setUserID] = useState(null);
   const usersCollectionRef = collection(db, 'Users');
 
   const getUserList = async () => {
@@ -50,16 +50,6 @@ const App = () => {
     }
   };
 
-  const getUserDocID= async (uid) => {
-    const querySnapshot = await getDocs(query(collection(db, "Users"), where("uid", "==", uid)));
-    if(!querySnapshot) {
-      console.log("nothing in getUserDocID() snapshot")
-      return;
-    }
-    const id = querySnapshot.docs[0].id;
-    setUserDocID(id);
-    return;
-  };
 
   const handleSignIn = async () => {
     try {
@@ -98,6 +88,27 @@ const App = () => {
       setUser(null);
     }
   });
+
+  const getUserDocID= async (email) => {
+    try {
+      const querySnapshot = await getDocs(query(collection(db, "Users"), where("email", "==", email)));
+      if (!querySnapshot.empty) {
+        const id = querySnapshot.docs[0].id;
+        setUserID(id);
+        console.log("Set userID to - " + id);
+      } else {
+        console.log("No document found in getUserDocID() snapshot");
+      }
+    } catch (error) {
+      console.error("Error in getUserDocID:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (user && user.email) {
+      getUserDocID(user.email);
+    }
+  }, [user]);
    
 
   return (
@@ -109,7 +120,8 @@ const App = () => {
           <button onClick={handleSignOut}>Sign Out</button>
           <Friends user={user}/>
           <FoodPost/>
-          <MarketplacePost userID = {userDocID}/>
+          <script>getUserDocID(user.email)</script>
+          <MarketplacePost userID = {userID}/>
         </div>
       ) : (
         <button onClick={handleSignIn}>Sign in with Google</button>
