@@ -83,7 +83,7 @@ export const Post = ({user}) => {
          <Typography variant = "h5">Comments:</Typography>
          <TextField label="Add comment:" variant="standard" /> {/*TODO: render comment when press enter*/}
          <CommentList></CommentList>
-         <h5>{user.date.seconds}</h5>
+         <h5>{new Date(user.date.seconds*1000).toLocaleString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'})}</h5>
          <br /><br />
       </Card>
       </>

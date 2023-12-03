@@ -75,7 +75,6 @@ export default function HomeAdd() {
     || post.text.toLowerCase().includes(searchQuery.toLowerCase()))
     && (!findVeg || post.veg == findVeg)
   );
-    
 
   return (
     <>
@@ -134,10 +133,12 @@ export default function HomeAdd() {
                   <Button variant="contained" component="span" sx={{color:"white"}}>Upload</Button>
                 </label>
               </Grid>
-
+            <Link to ="/home">
               <Grid item xs ={6}>
-                <Button variant = "contained" sx={{color:"white", marginTop:"2em"}} onClick={onSubmitPost}>Submit</Button>
+                <Button variant = "contained" sx={{color:"white", marginTop:"2em"}} onClick={() => {alert("Succesfully posted!"); onSubmitPost();}}>Submit</Button>
               </Grid>
+            </Link>
+     
             </Grid>
           </CardContent>
         </Card>
