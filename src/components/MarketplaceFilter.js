@@ -49,7 +49,7 @@ const MarketplaceFilter = ({ onFiltersChange }) => {
             onChange={handleRestaurantChange}
           >
             
-            <MenuItem value="low">$1-$5</MenuItem>
+            <MenuItem value="low">$0-$5</MenuItem>
             <MenuItem value="mid">$5-$10</MenuItem>
             <MenuItem value="high">{'>'}$10</MenuItem> 
           </Select>

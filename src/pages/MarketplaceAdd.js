@@ -1,22 +1,27 @@
 import Navbar from "../components/Navbar";
 import { Card, CardContent, Grid, TextField, Typography, InputLabel, Button } from "@mui/material";
-import "../components/Card.css"; 
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'; 
+import "../components/Card.css";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Link } from "react-router-dom";
+import dayjs from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 export default function MarketplaceAdd() {
   return (
     <>
       <Navbar />
       <div style={{ position: 'relative', width: '100%' }}>
-      <Link to ="/marketplace">
-        <Button 
-          variant="contained" 
-          startIcon={<ArrowBackIcon />} 
-          sx={{ position: 'absolute', top: "1.5em", left: "1.5em", color: "white" }}
-        >
-         Back
-        </Button>
+        <Link to="/marketplace">
+          <Button
+            variant="contained"
+            startIcon={<ArrowBackIcon />}
+            sx={{ position: 'absolute', top: "1.5em", left: "1.5em", color: "white" }}
+          >
+            Back
+          </Button>
         </Link>
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -24,7 +29,7 @@ export default function MarketplaceAdd() {
           <CardContent>
             <Grid container spacing={3}>
               <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
-                <Typography variant = "h3">Add New Posting</Typography>
+                <Typography variant="h3">Add New Posting</Typography>
               </Grid>
 
               <Grid item xs={12} sm={6}>
@@ -70,6 +75,14 @@ export default function MarketplaceAdd() {
               </Grid>
 
               <Grid item xs={12} sm={6}>
+                <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth sx={{ my: 2 }}>
+                  <DemoContainer components={['DatePicker']}>
+                    <DatePicker label="Choose a date" />
+                  </DemoContainer>
+                </LocalizationProvider>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
                 <InputLabel >Contact Information</InputLabel>
                 <TextField
                   fullWidth
@@ -78,8 +91,8 @@ export default function MarketplaceAdd() {
                   required
                 />
               </Grid>
-              <Grid item xs ={6}>
-                <Button variant = "contained" sx={{color:"white"}}>Submit</Button>
+              <Grid item xs={6}>
+                <Button variant="contained" sx={{ color: "white" }}>Submit</Button>
               </Grid>
             </Grid>
           </CardContent>
