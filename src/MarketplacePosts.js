@@ -19,6 +19,7 @@ const MarketplacePost = ({ userID }) => {
     const [newStartHour, setStartHour] = useState('');
     const [newEndHour, setEndHour] = useState('');
     const [newPrice, setPrice] = useState('');
+    const [newDate, setDate] = useState('');
 
     const getMarketplaceList = async () => {
         try {
@@ -82,6 +83,28 @@ const MarketplacePost = ({ userID }) => {
                 return numberString + zeroString;
             }
 
+            function dateToTimestamp(dateString) {
+
+                /*
+                var dashCounter = 0
+                var yearString = ""
+                for(var i = 0; i < length(dateString); i++) {
+                    if (dateString[i] === "-") {
+                        dashCounter++;
+                    } else {
+                        switch (dashCounter) {
+                            case 0 :
+
+                        }
+                    }
+                }
+                */
+
+                const currentDate = new Date(dateString);
+                currentDate.setHours(0, 0, 0, 0); 
+                const currentDateTimestamp = Timestamp.fromDate(currentDate);
+                return currentDateTimestamp; 
+            }
   
             await addDoc(marketplaceCollectionRef, {
                 contactInfo: newContactInfo,
@@ -90,7 +113,7 @@ const MarketplacePost = ({ userID }) => {
                 endHour: newEndHour,
                 price: removeTrailingZeros(newPrice),
                 uid: userID,
-                date: Timestamp.fromDate(new Date())
+                date: dateToTimestamp(newDate)
             });
 
             // reload page to (temporarily??) fix issue that "where" and first "orderBy" must be same type
@@ -151,6 +174,7 @@ const MarketplacePost = ({ userID }) => {
                 <input type="time" required placeholder="Start Hour" onChange={(e) => {setStartHour(e.target.value)}}/>
                 <input type="time" required placeholder="End Hour" onChange={(e) => {setEndHour(e.target.value)}}/>
                 <input type="number" required placeholder="Price" pattern="^\d*(\.\d{0,2})?$" onChange={(e) => {setPrice(e.target.value)}}/>
+                <input type="date" required min={(new Date(Date.now() - 86400000)).toISOString().split("T")[0]}   placeholder="Day Available" onChange={(e) => {setDate(e.target.value)}}/>
                 <button onClick={onSubmitMarketplacePost}>Submit Marketplace Post</button>
             </div>
             <div>
