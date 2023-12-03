@@ -7,15 +7,15 @@ const listing =
         id: 1,
         numSwipes: '',
         time: 'now',
+        date: 'today',
         contact: 'plshelp@gmail.com',
         price: '2',
         userID: '',
         profileImage: '',
         username: 'testuser123',
-        restaurant: 'Epicuria',
         title: 'NEED SWIPES',
         subtitle: 'PLEASEE',
-        type: 'buying'
+        type: 'selling'
     }
   
 
@@ -74,6 +74,7 @@ function Post ({listing}) {
           </Grid>
           <Grid item xs={12}>
             <Typography variant="body1">Time: {listing.time}</Typography>
+            <Typography variant="body1">Date: {listing.date}</Typography>
             <Typography variant="body1">Price per Swipe: ${listing.price}</Typography>
             <Typography variant="body1">Contact: {listing.contact}</Typography>
           </Grid>

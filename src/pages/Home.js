@@ -16,6 +16,7 @@ import EggIcon from '@mui/icons-material/Egg';
 import EggAltIcon from '@mui/icons-material/EggAlt';
 import Rating from '@mui/material/Rating';
 import { styled } from '@mui/material/styles';
+import { Button } from '@mui/material';
 
 //code adapted from https://javascript.works-hub.com/learn/building-a-modular-infinite-scroll-252dd
 let page = 1;
@@ -100,7 +101,7 @@ function Toggle() { {/*TODO: reshow posts onclick*/}
       <div>
          <button onClick={handleClick} style={{
             color: "#2D68C4", backgroundColor: `${bgColour}`,
-            width: "250px", height: "60px", fontSize: "20px", borderRadius: "5px", border: "solid gray"
+            width: "250px", height: "60px", fontSize: "20px", border: "3px solid #2D68C4", borderRadius: "10px"
          }}
             onMouseEnter={() => setBgColour("#ADD8E6")}
             onMouseLeave={() => setBgColour("#FFFFFF")}
@@ -188,10 +189,11 @@ function PostButton() {
 
             <button style={{
                color: "#2D68C4", backgroundColor: `${bgColour}`,
-               width: "250px", height: "60px", fontSize: "20px", borderRadius: "5px", border: "solid gray"
+               width: "250px", height: "60px", fontSize: "20px", border: "3px solid #2D68C4", borderRadius: "10px"
             }}
                onMouseEnter={() => setBgColour("#ADD8E6")}
                onMouseLeave={() => setBgColour("#FFFFFF")}
+
             >
                New Post
             </button>
@@ -205,7 +207,7 @@ export default function HomePage() {
       <>
          <Navbar></Navbar>
 
-         <div class="row">
+         <div class="row" style ={{backgroundColor:"#FAF9F6"}}>
             <div class="column left">
                <SearchBar></SearchBar>
                <div class='leftmargin'>

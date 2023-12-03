@@ -14,7 +14,7 @@ import Home from './pages/Home'
 import UserPage from './pages/UserPage';
 import OtherUserPage from './pages/OtherUserPage';
 import HomeAdd from './pages/HomePageAdd';
-
+import './App.css';
 
 const theme = createTheme({
   palette: {
@@ -30,6 +30,12 @@ const theme = createTheme({
       dark: '#f06800',
       contrastText: '#fff',
     },
+  },
+  typography: {
+    fontFamily: [
+      'InstagramSans',
+      'serif',
+    ].join(','),
   },
 });
 

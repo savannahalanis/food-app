@@ -10,6 +10,10 @@ import LocalDiningIcon from '@mui/icons-material/LocalDining';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
+import { Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
+import "./Card.css";
+import { Card } from '@mui/material';
 
 export const LikeButton = ({id}) => {
    const [postList, setPosts] = useState([])
@@ -56,15 +60,17 @@ export const Post = ({user}) => {
 
    return(
       <>
-         <h1>username: {user.uid}</h1><br /> {/*TODO: pass in value*/} {/*ESHASnwUW6eE7Ezi58WbreGUvM03*/}
+      <Card className = "card" style = {{background:"white", width:"520px", padding: "1em" }}>
+         <h1>username: {user.uid}</h1><br /> {/*TODO: pass in value*/}
+         <Typography variant = "h3"><Link style={{color: "inherit"}}>username</Link></Typography> <br /> {/*TODO: pass in value*/}
          <img src={user.image} height="500px" width="500px" /> <br />
          <div className="rowcontainer">
             <LikeButton id={user.id}></LikeButton>
             &nbsp;
             <h3>{user.likes.length} likes</h3>
             </div>
-         <h1>{user.title}</h1>
-         <h2>{user.text}</h2>
+         <Typography variant = "h3">{user.title}</Typography>
+         <Typography variant = "h5">{user.text}</Typography>
          <div className='rowcontainer'>
             <Button variant="outlined" disableRipple={true} color="primary" size="small" startIcon={<LocationOnIcon />}>
             Location: {user.location}
@@ -74,12 +80,12 @@ export const Post = ({user}) => {
             Restrictions: {/*TODO: pass in value*/}
             </Button>
          </div>
-         <h2>Comments:</h2>
+         <Typography variant = "h5">Comments:</Typography>
          <TextField label="Add comment:" variant="standard" /> {/*TODO: render comment when press enter*/}
          <CommentList></CommentList>
          <h5>{user.date.seconds}</h5>
          <br /><br />
-      </>
+      </Card>
 )}
 
 export default Post;

@@ -18,7 +18,7 @@ export default function Login() {
     <ThemeProvider theme={theme}>
       <Navbar />
       
-      <Container component="main" maxWidth="xs" >
+      <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
           sx={{

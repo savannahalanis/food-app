@@ -6,6 +6,11 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
+import dayjs from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const MarketplaceFilter = ({ onFiltersChange }) => {
   const [timeFilter, setTimeFilter] = useState('');
@@ -28,38 +33,32 @@ const MarketplaceFilter = ({ onFiltersChange }) => {
           Filter
         </Typography>
 
-        <FormControl fullWidth sx={{ my: 2 }}>
-          <InputLabel id="time-select-label">Time</InputLabel>
-          <Select
-            labelId="time-select-label"
-            id="time-select"
-            value={timeFilter}
-            label="Time"
-            onChange={handleTimeChange}
-          >
-            <MenuItem value="hour">Last Hour</MenuItem>
-            <MenuItem value="day">Today</MenuItem>
-            <MenuItem value="week">This Week</MenuItem>
-            <MenuItem value="all">All Time</MenuItem>
-          </Select>
-        </FormControl>
+        <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth sx={{ my: 2 }}>
+          <DemoContainer components={['DatePicker']}>
+            <DatePicker label="Choose a date" />
+          </DemoContainer>
+        </LocalizationProvider>
 
-        <FormControl fullWidth>
-          <InputLabel id="restaurant-select-label">Restaurant</InputLabel>
+        <FormControl fullWidth sx={{ my: 2 }}>
+          <InputLabel id="restaurant-select-label">Price</InputLabel>
           <Select
-            labelId="restaurant-select-label"
-            id="restaurant-select"
+            labelId="price-select-label"
+            id="price-select"
             value={restaurantFilter}
-            label="Restaurant"
+            label="Price"
             onChange={handleRestaurantChange}
           >
             
-            <MenuItem value="restaurant1">BPlate</MenuItem>
-            <MenuItem value="restaurant2">De Neve</MenuItem>
-            <MenuItem value="restaurant3">Epicuria</MenuItem>
-            
+            <MenuItem value="low">$0-$5</MenuItem>
+            <MenuItem value="mid">$5-$10</MenuItem>
+            <MenuItem value="high">{'>'}$10</MenuItem> 
           </Select>
         </FormControl>
+      
+      <Typography> {/*Temporary display for availability*/}
+        There are options available!
+        No options available
+      </Typography>
       </CardContent>
     </Card>
   );
