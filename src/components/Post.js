@@ -8,6 +8,9 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
+import "./Card.css";
+import { Card } from '@mui/material';
 
 function LikeButton() {
    const [liked, setLiked] = useState(false)
@@ -38,8 +41,8 @@ function CommentList() {
 export const Post = ({user}) => {
 
    return(
-      <>
-         <Typography variant = "h3">username</Typography> <br /> {/*TODO: pass in value*/}
+      <Card className = "card" style = {{background:"white", width:"520px", padding: "1em" }}>
+         <Typography variant = "h3"><Link style={{color: "inherit"}}>username</Link></Typography> <br /> {/*TODO: pass in value*/}
          <img src={user.image} height="500px" width="500px" /> <br />
          <div className="rowcontainer">
             <LikeButton></LikeButton>
@@ -62,7 +65,7 @@ export const Post = ({user}) => {
          <CommentList></CommentList>
          <h5>November 31, 3091</h5> {/*TODO: pass in value*/}
          <br /><br />
-      </>
+      </Card>
 )}
 
 export default Post;
