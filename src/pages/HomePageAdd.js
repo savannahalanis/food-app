@@ -1,17 +1,16 @@
 import {useEffect, useState} from 'react'
 import {db, storage} from '../Firebase.js'
-import {ref, uploadBytesResumable} from 'firebase/storage';
+import {ref, uploadBytesResumable, listAll, getDownloadURL} from 'firebase/storage';
 import {getDocs, collection, addDoc, deleteDoc, updateDoc, doc, serverTimestamp} from 'firebase/firestore'
 import Navbar from "../components/Navbar";
 import { Card, CardContent, Grid, TextField, Typography, InputLabel, Button } from "@mui/material";
 import "../components/Card.css"; 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'; 
 import { Link } from "react-router-dom";
-import { SetMealOutlined } from '@mui/icons-material';
+import { ListAltOutlined, SetMealOutlined } from '@mui/icons-material';
 import {v4} from 'uuid';
 
 export default function HomeAdd() {
-
   const [postList, setPostList] = useState([]);
   const postCollectionRef = collection(db, "Food_Post")
 
@@ -23,9 +22,12 @@ export default function HomeAdd() {
   const [newVeg, setVeg] = useState(false);
   const [newLikes, setLikes] = useState(0);
   const [imageUpload, setImageUpload] = useState(null);
+  const [imageList, setImageList] = useState([]);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [findVeg, setFindVeg] = useState(false);
+
+  const imageListRef = ref(storage, "/food_post_images/")
 
   const getPostList = async () => {
     const data = await getDocs(postCollectionRef);
@@ -35,28 +37,7 @@ export default function HomeAdd() {
 
   useEffect(() => {
     getPostList();
-  }, [])
-
-  const handleFileChange = (event) => {
-    // Access the selected file with `event.target.files[0]`
-    const file = event.target.files[0];
-    console.log(file); // You can handle the file upload process here
-  };
-
-  const uploadImage = (event) => {
-    console.log(ref)
-    if (imageUpload == null) return;
-    alert("Image Uploaded")
-    const imageRef = ref(storage, `/food_post_images/${imageUpload.name + v4()}`)
-    console.log(imageRef)
-    uploadBytesResumable(imageRef, imageUpload) 
-      .then(() => {
-        alert("Image Uploaded");
-      })
-      .catch((error) => {
-        console.error("Error uploading image:", error);
-      });
-  };
+  }, []);
 
   const deletePost = async(id) => {
     const postDoc = doc(db, "Food_Post", id)
@@ -74,10 +55,13 @@ export default function HomeAdd() {
 
   const onSubmitPost = async () => {
       try{
+        const imageRef = ref(storage, `/food_post_images/${imageUpload.name + v4()}`);
+        await uploadBytesResumable(imageRef, imageUpload);
+        const imageURL = await getDownloadURL(imageRef)
         await addDoc(postCollectionRef, {
             title: newTitle, 
             text: newText, 
-            image: newImage,
+            image: imageURL,
             date: serverTimestamp(),
             veg: newVeg,
             likes: newLikes,
@@ -110,6 +94,7 @@ export default function HomeAdd() {
         </Button>
         </Link>
       </div>
+      <div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
         <Card className="card" sx={{ maxWidth: 600, margin: 'auto', mt: 2 }}>
           <CardContent>
@@ -138,21 +123,11 @@ export default function HomeAdd() {
                 <TextField fullWidth id="restrictions" variant="standard" required/>
               </Grid>
 
-              {/*<Grid item xs={12} sm={6}>
-                <InputLabel >Choose Image</InputLabel>
-                <input accept="image/*" style={{ display: 'none' }} id="raised-button-file" multiple type="file" onChange={handleFileChange}/>
-                <label htmlFor="raised-button-file">
-                    <Button variant="contained" component="span" sx={{color:"white"}}>
-                        Upload
-                    </Button>
-                </label>
-              </Grid>*/}
-
               <Grid item xs={12} sm={6}>
                 <InputLabel>Choose Image</InputLabel>
-                <input type="file" onChange={(event) => {setImageUpload(event.target.files[0])}}></input>
+                <input accept="image/*" style={{ display: 'none' }} id="raised-button-file" multiple type="file" onChange={(event) => {setImageUpload(event.target.files[0])}}></input>
                 <label htmlFor="raised-button-file">
-                  <Button variant="contained" component="span" sx={{color:"white"}} onClick={uploadImage}>Upload</Button>
+                  <Button variant="contained" component="span" sx={{color:"white"}}>Upload</Button>
                 </label>
               </Grid>
 
@@ -162,12 +137,12 @@ export default function HomeAdd() {
             </Grid>
           </CardContent>
         </Card>
-        <div>
-            <div>
+      </div>
+      <div>
                 {filteredPosts.map((post, index) => (
                     <div key={index}>
                         <h1>{post.title}</h1>
-                        <img src={post.image} width="100" height="100"></img>
+                        <img src={post.image} width="200" height="200"></img>
                         <p>{post.text}</p>
                         <button onClick={() => deletePost(post.id)}>Delete Post</button>
                         <button onClick={() => likePost(post.id)}>Like</button>
@@ -175,7 +150,6 @@ export default function HomeAdd() {
                     </div>
                 ))}
             </div>
-        </div>
       </div>
     </>
     

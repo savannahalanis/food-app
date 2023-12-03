@@ -39,14 +39,14 @@ export const Post = ({user}) => {
    return(
       <>
          <h1>username</h1> <br /> {/*TODO: pass in value*/}
-         <img src={user.url} height="650px" width="650px" /> {/*TODO: pass in picture for post*/}<br />
+         <img src={user.image} height="500px" width="500px" /> <br />
          <div className="rowcontainer">
             <LikeButton></LikeButton>
             &nbsp;
-            <h3>0 likes</h3> {/*TODO: pass in value*/}
+            <h3>{user.likes} likes</h3>
             </div>
-         <h1>title</h1> {/*TODO: pass in value*/}
-         <h2>(subtitle) {user.title}</h2> {/*subtitle*/} {/*TODO: pass in value*/}
+         <h1>{user.title}</h1>
+         <h2>{user.text}</h2>
          <div className='rowcontainer'>
             <Button variant="outlined" disableRipple={true} color="primary" size="small" startIcon={<LocationOnIcon />}>
             Location: {/*TODO: pass in value*/}
