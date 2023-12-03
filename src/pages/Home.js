@@ -1,4 +1,6 @@
 import * as React from 'react';
+import {db} from '../Firebase.js'
+import {collection, getDocs, doc} from 'firebase/firestore'
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Navbar from "../components/Navbar";
@@ -18,26 +20,31 @@ import { styled } from '@mui/material/styles';
 
 //code adapted from https://javascript.works-hub.com/learn/building-a-modular-infinite-scroll-252dd
 let page = 1;
-const fetchData = (setItems, items) => {
-   axios
+const fetchData = async (setPosts, posts) => {
+   /*axios
       .get(`https://jsonplaceholder.typicode.com/photos?_page=${page}&_limit=10`) //fake API. basically, there are user objects with an albumId, id, title, url, thumbnailurl.
       .then((res) => {
          setItems([...items, ...res.data]); //adding what fetched to array
          page = page + 1;
-      });
+      });*/
+      const postCollectionRef = collection(db, "Food_Post")
+      const data = await getDocs(postCollectionRef);
+      const filteredData = data.docs.map((doc) => ({...doc.data(), id: doc.id}));
+      setPosts(filteredData);
 };
 
+
 function Posts() {
-   const [items, setItems] = useState([]);
+   const [posts, setPosts] = useState([]);
 
    React.useEffect(() => {
-      fetchData(setItems, items)
+      fetchData(setPosts, posts)
    }, [])
    return (
       <InfiniteScroll
-         dataLength={items.length}
+         dataLength={posts.length}
          next={() => {
-            fetchData(setItems, items);
+            fetchData(setPosts, posts);
          }}
          hasMore={true}
          loader={<h4>Loading...</h4>}
@@ -48,7 +55,7 @@ function Posts() {
          }
       >
          <div style={{ minHeight: "100vh" }}>
-            {items.map((user) => (
+            {posts.map((user) => (
                <Post user={user}></Post>
             ))}
          </div>

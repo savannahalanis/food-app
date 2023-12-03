@@ -34,34 +34,34 @@ function CommentList() {
    );
 }
 
-function Post({user})
-{
-return(
-<>
-   <h1>username</h1> <br /> {/*TODO: pass in value*/}
-   <img src={user.url} height="650px" width="650px" /> {/*TODO: pass in picture for post*/}<br />
-   <div className="rowcontainer">
-      <LikeButton></LikeButton>
-      &nbsp;
-      <h3>0 likes</h3> {/*TODO: pass in value*/}
-   </div>
-   <h1>title</h1> {/*TODO: pass in value*/}
-   <h2>(subtitle) {user.title}</h2> {/*subtitle*/} {/*TODO: pass in value*/}
-   <div className='rowcontainer'>
-      <Button variant="outlined" disableRipple={true} color="primary" size="small" startIcon={<LocationOnIcon />}>
-         Location: {/*TODO: pass in value*/}
-      </Button>
-      &nbsp;
-      <Button variant="outlined" disableRipple={true} color="primary" size="small" startIcon={<LocalDiningIcon />}>
-         Restrictions: {/*TODO: pass in value*/}
-      </Button>
-   </div>
-   <h2>Comments:</h2>
-   <TextField label="Add comment:" variant="standard" /> {/*TODO: render comment when press enter*/}
-   <CommentList></CommentList>
-   <h5>November 31, 3091</h5> {/*TODO: pass in value*/}
-   <br /><br />
-</>
+export const Post = ({user}) => {
+
+   return(
+      <>
+         <h1>username</h1> <br /> {/*TODO: pass in value*/}
+         <img src={user.image} height="500px" width="500px" /> <br />
+         <div className="rowcontainer">
+            <LikeButton></LikeButton>
+            &nbsp;
+            <h3>{user.likes} likes</h3>
+            </div>
+         <h1>{user.title}</h1>
+         <h2>{user.text}</h2>
+         <div className='rowcontainer'>
+            <Button variant="outlined" disableRipple={true} color="primary" size="small" startIcon={<LocationOnIcon />}>
+            Location: {/*TODO: pass in value*/}
+            </Button>
+            &nbsp;
+            <Button variant="outlined" disableRipple={true} color="primary" size="small" startIcon={<LocalDiningIcon />}>
+            Restrictions: {/*TODO: pass in value*/}
+            </Button>
+         </div>
+         <h2>Comments:</h2>
+         <TextField label="Add comment:" variant="standard" /> {/*TODO: render comment when press enter*/}
+         <CommentList></CommentList>
+         <h5>November 31, 3091</h5> {/*TODO: pass in value*/}
+         <br /><br />
+      </>
 )}
 
 export default Post;
