@@ -28,16 +28,6 @@ export default function MarketplaceAdd() {
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <InputLabel >Restaurant</InputLabel>
-                <TextField
-                  fullWidth
-                  id="restaurant"
-                  variant="standard"
-                  required
-                />
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
                 <InputLabel >Price per Swipe</InputLabel>
                 <TextField
                   fullWidth

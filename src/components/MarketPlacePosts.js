@@ -12,10 +12,9 @@ const listing =
         userID: '',
         profileImage: '',
         username: 'testuser123',
-        restaurant: 'Epicuria',
         title: 'NEED SWIPES',
         subtitle: 'PLEASEE',
-        type: 'buying'
+        type: 'selling'
     }
   
 
