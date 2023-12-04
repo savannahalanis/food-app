@@ -6,7 +6,6 @@ import Image from './static/background3.png';
 
 import './App.css';
 import { useTheme } from '@emotion/react';
-import { useNavigate } from 'react-router-dom';
 
 import {
   getAuth,
@@ -20,7 +19,6 @@ import { db } from './Firebase.js';
 
 function App() {
   const theme = useTheme();
-  const navigate = useNavigate(); // Use useNavigate outside the callback
 
   const [userList, setUserList] = useState([]);
   const [user, setUser] = useState(null);
@@ -49,6 +47,7 @@ function App() {
         photoURL: user.photoURL,
         createdAt: serverTimestamp(),
         friends: [],
+        followers: [],
       };
 
       try {
@@ -122,7 +121,7 @@ function App() {
                   <br></br>
                   <br></br>
                   <div>
-                    <Link to="/home" state={{ user: JSON.stringify(user) }}>
+                    <Link to="/home">
                       <Button variant="contained" sx={{ color: 'white' }}>
                         Go to Site
                       </Button>

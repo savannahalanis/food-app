@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {db} from '../Firebase.js'
-import {collection, getDocs, doc, deleteDoc} from 'firebase/firestore'
+import {collection, getDocs, updateDoc, doc, getDoc, where, query, deleteDoc} from 'firebase/firestore'
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Navbar from "../components/Navbar";
@@ -18,7 +18,7 @@ import Rating from '@mui/material/Rating';
 import { styled } from '@mui/material/styles';
 import { Button } from '@mui/material';
 
-import { useLocation } from 'react-router-dom';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 
 //code adapted from https://javascript.works-hub.com/learn/building-a-modular-infinite-scroll-252dd
@@ -76,20 +76,88 @@ function Posts() {
    );
 }
 
-function SearchBar() { {/*TODO: load userpage when search input matches*/}
-   return (
-      <Box
-         component="form"
-         sx={{
-            '& > :not(style)': { m: 1, width: '25ch' },
-         }}
-         noValidate
-         autoComplete="off"
-      >
-         <TextField id="outlined-basic" label="Search friends!" variant="outlined" inputProps={{ style: { fontSize: 25 } }} />
-      </Box>
+const addFriend = async (user_id, friend) => {
+   const friendId = friend.id;
+ 
+   console.log('Friend:' + friend.uid);
+   console.log('User:' + user_id);
+
+   const userQuery = query(collection(db, "Users"), where("uid", "==", user_id));
+   const userQuerySnapshot = await getDocs(userQuery);
+
+   if (!userQuerySnapshot.empty) {
+     const userDoc = doc(db, "Users", userQuerySnapshot.docs[0].id);
+     const userSnapshot = await getDoc(userDoc);
+     const userData = userSnapshot.data();
+
+     if (!userData.friends || !userData.friends.includes(friendId)) {
+       const updatedFriendsArray = [...(userData.friends || []), friendId];
+       await updateDoc(userDoc, { friends: updatedFriendsArray });
+
+       const friendQuerySnapshot = await getDocs(query(collection(db, "Users"), where("uid", "==", friend.uid)));
+       const friendDoc = doc(db, "Users", friendQuerySnapshot.docs[0].id);
+       const friendSnapshot = await getDoc(friendDoc);
+       const friendData = friendSnapshot.data();
+       const updatedFollowersArray = [...(friendData.friends || []), user_id];
+       await updateDoc(userDoc, { followers: updatedFollowersArray });
+
+     } else {
+       console.log("FriendId already exists in friends array");
+     }
+   } else {
+     console.log("User document not found");
+   }
+ };
+
+function SearchBar(props) {
+   const [searchQuery, setSearchQuery] = useState('');
+   const [userList, setUserList] = useState([]);
+   const userCollectionRef = collection(db, "Users")
+   const { user } = props;
+
+   const getUserList = async () => {
+      const data = await getDocs(userCollectionRef);
+      const filteredData = data.docs.map((doc) => ({...doc.data(), id: doc.id}));
+      setUserList(filteredData)
+  };
+
+   getUserList();
+   const filteredUsers = userList.filter(user =>
+     user.displayName.toLowerCase().includes(searchQuery.toLowerCase())
    );
-}
+ 
+   return (
+     <Box
+       component="form"
+       sx={{
+         '& > :not(style)': { m: 1, width: '25ch' },
+       }}
+       noValidate
+       autoComplete="off"
+     >
+       <TextField
+         id="outlined-basic"
+         label="Search friends!"
+         variant="outlined"
+         inputProps={{ style: { fontSize: 25 } }}
+         value={searchQuery}
+         onChange={(e) => setSearchQuery(e.target.value)}
+       />
+ 
+      {searchQuery && (
+        <div>
+          {filteredUsers.map((curr_user, index) => (
+                <div key={index}>
+                    {curr_user.uid !== user.uid && (                        
+                         <Button onClick={() => addFriend(user.uid, curr_user)}>{curr_user.displayName}</Button>                  
+                    )}
+                </div>
+            ))}
+        </div>
+      )}
+     </Box>
+   );
+ }
  
  
 
@@ -207,22 +275,40 @@ function PostButton() {
    );
 }
 
-export default function HomePage(props) {
-  const location = useLocation();
-  const { state } = location;
-  const { user } = state || {};
-  const parsedUser = user ? JSON.parse(user) : null;
+export default function HomePage(props) {  
+  const [user, setUser] = useState(null);
+  const auth = getAuth();
+
+
+  onAuthStateChanged(auth, async(user) => {
+    if (user) {
+      setUser(user);
+    } else {
+      setUser(null);
+    }
+  });
+  useEffect(() => {
+   const unsubscribe = onAuthStateChanged(auth, (user) => {
+     if (user) {
+       setUser(user);
+     } else {
+       setUser(null);
+     }
+   });
+   return () => unsubscribe();
+ }, [auth]);
+ 
 
    return (
       <div>
          {user ? (
          <>
-            <p>User: {JSON.parse(user).displayName}</p>
+            <p>User: {user.displayName}</p>
             <Navbar></Navbar>
 
             <div class="row" style ={{backgroundColor:"#FAF9F6"}}>
                <div class="column left">
-                  <SearchBar></SearchBar>
+                  <SearchBar user={user}></SearchBar>
                   <div class='leftmargin'>
                      <PostButton></PostButton>
                   </div>
