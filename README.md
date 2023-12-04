@@ -1,5 +1,5 @@
 ### Description: 
-Chew-CLA is an inclusive online platform that allows students at UCLA to share their favorite meals from across the various dining options on campus. Users are able to post, like, comment, follow other users, and sell/buy dining swipes from campus. This website provides food lovers at UCLA to unite and is inclusive in providing users with food restrictions safety. 
+Chew-CLA is an inclusive application designed for students at UCLA to share their favorite meals from across the various dining options on campus. Users are able to post, like, comment, follow friends, and sell/buy dining swipes from campus. This website provides food enthusiasts at UCLA to unite and and prioritizes inclusivity by ensuring a safe space for users with dietary restrictions. Chew-CLA is the ultimate hub of activity when it comes to food lovers.
 
 ### Features:
 1) User accounts able to sign up with their UCLA email and login successfully. Users have their own profile with all their information.
@@ -16,14 +16,10 @@ Chew-CLA is an inclusive online platform that allows students at UCLA to share t
 2) npm install - to install all the necessary dependencies/packages for the Chew-CLA application
 3) npm start - run the web application accessible in the browser
 
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Technology
+### Technology
 Firebase, React, Javascript, CSS, HTML, MUI(Material UI), Node.JS
 
-#Project Contributors
+### Project Contributors
 Frontend Team: Ashely Cheng, April Sun
 Backend Team: Megan Jacob, Sakshi Thoutireddy, Savannah Alanis(owner)
 
