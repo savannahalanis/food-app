@@ -18,6 +18,9 @@ import EggAltIcon from '@mui/icons-material/EggAlt';
 import Rating from '@mui/material/Rating';
 import { styled } from '@mui/material/styles';
 
+import { useLocation } from 'react-router-dom';
+
+
 //code adapted from https://javascript.works-hub.com/learn/building-a-modular-infinite-scroll-252dd
 let page = 1;
 const fetchData = async (setPosts, posts) => {
@@ -77,6 +80,8 @@ function SearchBar() { {/*TODO: load userpage when search input matches*/}
       </Box>
    );
 }
+ 
+ 
 
 function Toggle() { {/*TODO: reshow posts onclick*/}
    const [buttonText, setButtonText] = useState('Posts From Friends');
@@ -191,32 +196,44 @@ function PostButton() {
    );
 }
 
-export default function HomePage() {
-   return (
-      <>
-         <Navbar></Navbar>
+export default function HomePage(props) {
+  const location = useLocation();
+  const { state } = location;
+  const { user } = state || {};
+  const parsedUser = user ? JSON.parse(user) : null;
 
-         <div class="row" style ={{backgroundColor:"#FAF9F6"}}>
-            <div class="column left">
-               <SearchBar></SearchBar>
-               <div class='leftmargin'>
-                  <PostButton></PostButton>
-               </div>
-            </div>
-            <div class="column middle">
-               <div className='center'>
-                  <div class='bottommargin topmargin'>
-                     <Toggle></Toggle>
+   return (
+      <div>
+         {user ? (
+         <>
+            <p>User: {JSON.parse(user).displayName}</p>
+            <Navbar></Navbar>
+
+            <div class="row" style ={{backgroundColor:"#FAF9F6"}}>
+               <div class="column left">
+                  <SearchBar></SearchBar>
+                  <div class='leftmargin'>
+                     <PostButton></PostButton>
                   </div>
                </div>
-               <div className='center'>
-                  <Posts></Posts>
+               <div class="column middle">
+                  <div className='center'>
+                     <div class='bottommargin topmargin'>
+                        <Toggle></Toggle>
+                     </div>
+                  </div>
+                  <div className='center'>
+                     <Posts></Posts>
+                  </div>
+               </div>
+               <div class="column right">
+                  <Reviews></Reviews>
                </div>
             </div>
-            <div class="column right">
-               <Reviews></Reviews>
-            </div>
-         </div>
-      </>
+         </>
+         ) : (
+            <p>User Not Logged In</p>
+          )}
+      </div>
    )
 }
