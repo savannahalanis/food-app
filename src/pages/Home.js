@@ -76,10 +76,10 @@ function Posts() {
    );
 }
 
-const addFriend = async (user_id, friend) => {
-   const friendId = friend.id;
+const addFollowing = async (user_id, following) => {
+   const followingId = following.id;
  
-   console.log('Friend:' + friend.uid);
+   console.log('Following:' + following.uid);
    console.log('User:' + user_id);
 
    const userQuery = query(collection(db, "Users"), where("uid", "==", user_id));
@@ -90,19 +90,19 @@ const addFriend = async (user_id, friend) => {
      const userSnapshot = await getDoc(userDoc);
      const userData = userSnapshot.data();
 
-     if (!userData.friends || !userData.friends.includes(friendId)) {
-       const updatedFriendsArray = [...(userData.friends || []), friendId];
-       await updateDoc(userDoc, { friends: updatedFriendsArray });
+     if (!userData.following || !userData.following.includes(followingId)) {
+       const updatedFollowingArray = [...(userData.following || []), followingId];
+       await updateDoc(userDoc, { following: updatedFollowingArray });
 
-       const friendQuerySnapshot = await getDocs(query(collection(db, "Users"), where("uid", "==", friend.uid)));
-       const friendDoc = doc(db, "Users", friendQuerySnapshot.docs[0].id);
-       const friendSnapshot = await getDoc(friendDoc);
-       const friendData = friendSnapshot.data();
-       const updatedFollowersArray = [...(friendData.friends || []), user_id];
-       await updateDoc(userDoc, { followers: updatedFollowersArray });
+       const followingQuerySnapshot = await getDocs(query(collection(db, "Users"), where("uid", "==", following.uid)));
+       const followingDoc = doc(db, "Users", followingQuerySnapshot.docs[0].id);
+       const followingSnapshot = await getDoc(followingDoc);
+       const followingData = followingSnapshot.data();
+       const updatedFollowersArray = [...(followingData.followers || []), user_id];
+       await updateDoc(followingDoc, { followers: updatedFollowersArray });
 
      } else {
-       console.log("FriendId already exists in friends array");
+       console.log("FollowingId already exists in following array");
      }
    } else {
      console.log("User document not found");
@@ -149,7 +149,7 @@ function SearchBar(props) {
           {filteredUsers.map((curr_user, index) => (
                 <div key={index}>
                     {curr_user.uid !== user.uid && (                        
-                         <Button onClick={() => addFriend(user.uid, curr_user)}>{curr_user.displayName}</Button>                  
+                         <Button onClick={() => addFollowing(user.uid, curr_user)}>{curr_user.displayName}</Button>                  
                     )}
                 </div>
             ))}

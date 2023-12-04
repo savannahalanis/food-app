@@ -46,7 +46,7 @@ function App() {
         email: user.email,
         photoURL: user.photoURL,
         createdAt: serverTimestamp(),
-        friends: [],
+        following: [],
         followers: [],
       };
 
