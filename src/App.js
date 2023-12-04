@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Grid, Typography, Button } from '@mui/material';
-import { Link, Navigate } from 'react-router-dom'; // Import Navigate from react-router-dom
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import HomePage from './pages/Home';
+import { Link } from 'react-router-dom';
 
 import Image from './static/background3.png';
 

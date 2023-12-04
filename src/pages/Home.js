@@ -1,12 +1,11 @@
 import * as React from 'react';
 import {db} from '../Firebase.js'
-import {collection, getDocs, doc} from 'firebase/firestore'
+import {collection, getDocs, doc, deleteDoc} from 'firebase/firestore'
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Navbar from "../components/Navbar";
 import { useState, useEffect, useRef } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component';
-import axios from "axios";
 import "../components/Home.css";
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
@@ -17,13 +16,14 @@ import EggIcon from '@mui/icons-material/Egg';
 import EggAltIcon from '@mui/icons-material/EggAlt';
 import Rating from '@mui/material/Rating';
 import { styled } from '@mui/material/styles';
+import { Button } from '@mui/material';
 
 import { useLocation } from 'react-router-dom';
 
 
 //code adapted from https://javascript.works-hub.com/learn/building-a-modular-infinite-scroll-252dd
 let page = 1;
-const fetchData = async (setPosts, posts) => {
+export const fetchData = async (setPosts, posts) => {
    /*axios
       .get(`https://jsonplaceholder.typicode.com/photos?_page=${page}&_limit=10`) //fake API. basically, there are user objects with an albumId, id, title, url, thumbnailurl.
       .then((res) => {
@@ -34,11 +34,18 @@ const fetchData = async (setPosts, posts) => {
       const data = await getDocs(postCollectionRef);
       const filteredData = data.docs.map((doc) => ({...doc.data(), id: doc.id}));
       setPosts(filteredData);
+      return posts;
 };
 
 
 function Posts() {
    const [posts, setPosts] = useState([]);
+
+   const deletePost = async(id) => {
+      const postDoc = doc(db, "Food_Post", id)
+      await deleteDoc(postDoc);
+      setPosts((oldPostList) => oldPostList.filter((post) => post.id !== id));
+   }
 
    React.useEffect(() => {
       fetchData(setPosts, posts)
@@ -59,7 +66,10 @@ function Posts() {
       >
          <div style={{ minHeight: "100vh" }}>
             {posts.map((user) => (
-               <Post user={user}></Post>
+               <>
+                  <Post user={user}></Post>
+                  <button onClick={() => deletePost(user.id)}>Delete Post</button>
+               </>
             ))}
          </div>
       </InfiniteScroll>
@@ -96,7 +106,7 @@ function Toggle() { {/*TODO: reshow posts onclick*/}
       <div>
          <button onClick={handleClick} style={{
             color: "#2D68C4", backgroundColor: `${bgColour}`,
-            width: "250px", height: "60px", fontSize: "20px", borderRadius: "5px", border: "solid gray"
+            width: "250px", height: "60px", fontSize: "20px", border: "3px solid #2D68C4", borderRadius: "10px"
          }}
             onMouseEnter={() => setBgColour("#ADD8E6")}
             onMouseLeave={() => setBgColour("#FFFFFF")}
@@ -184,10 +194,11 @@ function PostButton() {
 
             <button style={{
                color: "#2D68C4", backgroundColor: `${bgColour}`,
-               width: "250px", height: "60px", fontSize: "20px", borderRadius: "5px", border: "solid gray"
+               width: "250px", height: "60px", fontSize: "20px", border: "3px solid #2D68C4", borderRadius: "10px"
             }}
                onMouseEnter={() => setBgColour("#ADD8E6")}
                onMouseLeave={() => setBgColour("#FFFFFF")}
+
             >
                New Post
             </button>
