@@ -17,7 +17,7 @@ import EggAltIcon from '@mui/icons-material/EggAlt';
 import Rating from '@mui/material/Rating';
 import { styled } from '@mui/material/styles';
 import { Button } from '@mui/material';
-
+import { useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 
@@ -277,6 +277,7 @@ function PostButton() {
 
 export default function HomePage(props) {  
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
   const auth = getAuth();
 
 
@@ -285,6 +286,7 @@ export default function HomePage(props) {
       setUser(user);
     } else {
       setUser(null);
+      navigate('/');
     }
   });
   useEffect(() => {
@@ -293,10 +295,11 @@ export default function HomePage(props) {
        setUser(user);
      } else {
        setUser(null);
+       navigate('/');
      }
    });
    return () => unsubscribe();
- }, [auth]);
+ }, [auth, navigate]);
  
 
    return (
@@ -329,7 +332,7 @@ export default function HomePage(props) {
             </div>
          </>
          ) : (
-            <p>User Not Logged In</p>
+            <></>
           )}
       </div>
    )
