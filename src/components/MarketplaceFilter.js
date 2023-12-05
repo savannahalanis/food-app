@@ -16,42 +16,24 @@ const MarketplaceFilter = ({ onFiltersChange }) => {
   const [timeFilter, setTimeFilter] = useState('');
   const [restaurantFilter, setRestaurantFilter] = useState('');
 
-  const handleTimeChange = (event) => {
-    setTimeFilter(event.target.value);
-    
-  };
-
-  const handleRestaurantChange = (event) => {
-    setRestaurantFilter(event.target.value);
-    
-  };
-
   return (
     <Card sx={{ minWidth: 275, m: "2em" }}>
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          Filter
+          Filter by date or price!
         </Typography>
 
-        <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth sx={{ my: 2 }}>
-          <DemoContainer components={['DatePicker']}>
-            <DatePicker label="Choose a date" />
-          </DemoContainer>
-        </LocalizationProvider>
-
         <FormControl fullWidth sx={{ my: 2 }}>
-          <InputLabel id="restaurant-select-label">Price</InputLabel>
+          <InputLabel id="filter-label">Filter</InputLabel>
           <Select
             labelId="price-select-label"
             id="price-select"
             value={restaurantFilter}
             label="Price"
-            onChange={handleRestaurantChange}
+            //onChange={handleRestaurantChange}
           >
-            
-            <MenuItem value="low">$0-$5</MenuItem>
-            <MenuItem value="mid">$5-$10</MenuItem>
-            <MenuItem value="high">{'>'}$10</MenuItem> 
+            <MenuItem value="price">Price (Low-High)</MenuItem>
+            <MenuItem value="mid">Date</MenuItem>
           </Select>
         </FormControl>
       

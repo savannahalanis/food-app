@@ -5,21 +5,16 @@ import Image from '../static/background3.png'
 import React, { useEffect, useState } from 'react';
 import { db } from '../Firebase.js'
 import {getDocs, getDoc, collection, addDoc, deleteDoc, updateDoc, doc, serverTimestamp, Timestamp, orderBy, query, limit, where, direction, getFirestore} from 'firebase/firestore'
+
+import {currentDate, getNameFromID, twentyFourHourToTwelve} from './MarketPlaceFunctions.js'
   
 
 export default function MarketPlacePosts() {
 
   const [marketplaceList, setMarketplaceList] = useState([]);
   const [filterBy, setFilterBy] = useState("date")
-  const marketplaceCollectionRef = collection(db, "Selling_Post")
 
   // NEW POST STATES
-  const [newContactInfo, setContactInfo] = useState('');
-  const [newContactType, setContactType] = useState('');
-  const [newStartHour, setStartHour] = useState('');
-  const [newEndHour, setEndHour] = useState('');
-  const [newPrice, setPrice] = useState('');
-  const [newDate, setDate] = useState('');
 
   const getMarketplaceList = async () => {
       try {
@@ -42,31 +37,6 @@ export default function MarketPlacePosts() {
       getMarketplaceList();
   }, []);
 
-  function currentDate() {
-      const currentDate = new Date();
-      currentDate.setHours(0, 0, 0, 0); 
-      const currentDateTimestamp = Timestamp.fromDate(currentDate);
-      return currentDateTimestamp;        
-  };
-
-  const getNameFromID = async(userID) => {
-
-      try {
-          const userDocRef = doc(collection(db, 'Users'), userID);
-          const userDoc = await getDoc(userDocRef);
-
-          if (!userDoc.exists) {
-              return "User not found";
-          }
-
-          const username = userDoc.data().displayName;
-
-          return username;
-      } catch (err) {
-          console.error(err);
-      }
-  };
-
     return(
       <div>
         {marketplaceList.map((post, index) =>
@@ -81,24 +51,7 @@ export default function MarketPlacePosts() {
     )
 }
 
-function twentyFourHourToTwelve(dateString) {
 
-  var [hour, minute] = dateString.split(':'); 
-  hour = parseInt(hour)
-  console.log(hour)
-  var ending = ""
-  if (parseInt(hour) < 12 ) {
-      var ending = "AM";
-  } else if (parseInt(hour) == 12 ) {
-      var ending = "PM";
-  } else {
-      hour = hour-12;
-      ending = "PM";
-  }
-  var newDateString = String(hour) + ":" + minute + " " + ending;
-  return newDateString;
-
-}
 
 function Post ({listing}) {
     return (
