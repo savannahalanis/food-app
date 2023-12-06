@@ -19,6 +19,12 @@ import { styled } from '@mui/material/styles';
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import {FieldValue} from "firebase/firestore";
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { Check } from '@mui/icons-material';
+
+
 
 
 //code adapted from https://javascript.works-hub.com/learn/building-a-modular-infinite-scroll-252dd
@@ -57,7 +63,7 @@ function Posts() {
             fetchData(setPosts, posts);
          }}
          hasMore={true}
-         loader={<h4>Loading...</h4>}
+         loader={<h4>Loading More...</h4>}
          endMessage={
             <p style={{ textAlign: "center" }}>
                <b>end</b>
@@ -67,8 +73,9 @@ function Posts() {
          <div style={{ minHeight: "100vh" }}>
             {posts.map((user) => (
                <>
-                  <Post user={user}></Post>
-                  <button onClick={() => deletePost(user.id)}>Delete Post</button>
+               <Button onClick={() => deletePost(user.id)}>Delete Post</Button>
+                  <Post post={user}></Post>
+                  
                </>
             ))}
          </div>
@@ -111,9 +118,17 @@ const addFollowing = async (user_id, following) => {
 
 function SearchBar(props) {
    const [searchQuery, setSearchQuery] = useState('');
+   const [searchInput, setSearchInput] = useState('');
    const [userList, setUserList] = useState([]);
+   const [condition, setCondition] = useState(false);
+   const [findFollowing, setFindFollowing] = useState(false);
    const userCollectionRef = collection(db, "Users")
    const { user } = props;
+   console.log("User: ");
+   console.log(user);
+   const handleChange = (event) => {
+      setFindFollowing(event.target.checked);
+    };
 
    const getUserList = async () => {
       const data = await getDocs(userCollectionRef);
@@ -121,12 +136,12 @@ function SearchBar(props) {
       setUserList(filteredData)
   };
 
-   getUserList();
-   console.log(user)
-   
+
+   //getUserList();
    const filteredUsers = userList.filter(user =>
-    user.displayName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+      user.displayName.toLowerCase().includes(searchQuery.toLowerCase())
+   );
+
  
    return (
      <Box
@@ -137,16 +152,31 @@ function SearchBar(props) {
        noValidate
        autoComplete="off"
      >
+      
+     
        <TextField
          id="outlined-basic"
          label="Search friends!"
          variant="outlined"
          inputProps={{ style: { fontSize: 25 } }}
-         value={searchQuery}
-         onChange={(e) => setSearchQuery(e.target.value)}
+         value={searchInput}
+         onChange={(e) => setSearchInput(e.target.value)}
        />
- 
-      {searchQuery && (
+       
+       <FormControlLabel
+         control={
+            <Checkbox
+               checked={findFollowing}
+               onChange={handleChange}
+               color="primary"
+            />
+         }
+         label="Filter friends only"
+         labelPlacement="end"
+         />
+       <Button onClick={() => getUserList(searchQuery)} variant="contained" sx={{color:"white"}}>Search</Button>
+
+      {condition && searchQuery && (
         <div>
           {filteredUsers.map((curr_user, index) => (
                 <div key={index}>
@@ -196,64 +226,76 @@ const StyledRating = styled(Rating)({
    },
  });
 
-function Reviews() { {/*TODO: map actual data*/}
+//use update to update
+function Reviews() {
+   const [reviews, setReviews] = useState([]);
+
+   const[average, setAverage] = useState(0)
+   //item.avg.toString()
+
+   useEffect(() => {
+
+      const fetchData = async () => {
+         try {
+            const postCollectionRef = collection(db, "Ratings");
+            const data = await getDocs(postCollectionRef);
+            return data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+         } catch (err) {
+         }
+      };
+
+      fetchData().then((filteredData) => {
+         setReviews(filteredData);
+
+      });
+   }, []);
+
+   const updateRating = async (newRating, name) => {
+      if (newRating != null) {
+         const v = name
+         const oldArr = reviews[v].arr
+         const newArr = oldArr
+         newArr.push(newRating)
+         reviews[v].arr = newArr
+         console.log(reviews[v].arr)
+         reviews[v].avg = (reviews[v].arr.reduce((a, b) => a + b, 0)) / reviews[v].arr.length
+         setAverage(reviews[v].avg)
+      }
+   }
+
    return (
       <>
-         <ImageList sx={{ width: 300, height: 750 }} cols="1" >
-            {itemData.map((item) => (
+         <ImageList sx={{ width: 250, height: 750 }} cols="1" >
+            {reviews.map((item) => (
                <ImageListItem key={item.img}>
-                  <img
+                  <img 
                      srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
                      src={`${item.img}?w=248&fit=crop&auto=format`}
-                     alt={item.title}
                      loading="lazy"
                   />
                   <ImageListItemBar
                      title={item.title}
-                     subtitle={item.author}
-                     position="below"
+                     subtitle={"eggs: " + Math.trunc(item.avg * 10) / 10}
+                     position="top"
                   />
+                  <div class = "right">
                   <StyledRating
                      name="customized-color"
-                     defaultValue={0}
+                     defaultValue={5}
+                     max = {5}
+                     min = {0}
                      getLabelText={(value) => `${value} Egg${value !== 1 ? 's' : ''}`}
                      precision={1}
                      icon={<EggAltIcon fontSize="inherit" />}
                      emptyIcon={<EggIcon fontSize="inherit" />}
-                  />
+                     size = "large"
+                     onChange={(event, newValue) => updateRating(newValue, item.name)}
+                  /></div>
                </ImageListItem>
             ))}
          </ImageList></>
    );
 }
-
-const itemData = [ //temporary data for reviews
-   {
-      img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-      title: 'De Neve',
-      author: '5 Eggs',
-   },
-   {
-      img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-      title: 'Bplate',
-      author: '5 Eggs',
-   },
-   {
-      img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-      title: 'Truck 1',
-      author: '5 Eggs',
-   },
-   {
-      img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-      title: 'Truck 2',
-      author: '5 Eggs',
-   },
-   {
-      img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-      title: 'Cafe 1919',
-      author: '5 Eggs',
-   }
-]
 
 function PostButton() {
    const [bgColour, setBgColour] = useState("#FFFFFF");
@@ -263,14 +305,14 @@ function PostButton() {
          <Link to="/homeadd">
 
             <button style={{
-               color: "#2D68C4", backgroundColor: `${bgColour}`,
+               color: "#2D68C4", backgroundColor: `${bgColour}`, marginTop:"10px",
                width: "250px", height: "60px", fontSize: "20px", border: "3px solid #2D68C4", borderRadius: "10px"
             }}
                onMouseEnter={() => setBgColour("#ADD8E6")}
                onMouseLeave={() => setBgColour("#FFFFFF")}
 
             >
-               New Post
+               +  New Post
             </button>
          </Link>
       </div>
@@ -308,7 +350,7 @@ export default function HomePage(props) {
       <div>
          {user ? (
          <>
-            <p>User: {user.displayName}</p>
+          
             <Navbar></Navbar>
 
             <div class="row" style ={{backgroundColor:"#FAF9F6"}}>
@@ -328,7 +370,7 @@ export default function HomePage(props) {
                      <Posts></Posts>
                   </div>
                </div>
-               <div class="column right">
+               <div class="right">
                   <Reviews></Reviews>
                </div>
             </div>

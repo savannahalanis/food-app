@@ -20,13 +20,7 @@ import {HomePage} from "./Home.js"
 
 
 export default function MarketplaceAdd() {
-  
-  const [newContactInfo, setContactInfo] = useState('');
-  const [newContactType, setContactType] = useState('');
-  const [newStartHour, setStartHour] = useState('');
-  const [newEndHour, setEndHour] = useState('');
-  const [newPrice, setPrice] = useState('');
-  const [newDate, setDate] = useState('');
+
   const marketplaceCollectionRef = collection(db, "Selling_Post")
 
   const  {user, userDocID} = useDetermineUser();
@@ -41,31 +35,42 @@ export default function MarketplaceAdd() {
     const data = new FormData(event.currentTarget);
     console.log("Form Data:", data);
 
+    console.log("form date - " + data.get("date"))
+
 
     var dataContactInfo = data.get("contactInfo")
     var dataContactType = (data.get("contactType"))
     var dataStartHour = data.get("startHour")
     var dataEndHour = data.get("endHour")
     var dataPrice = data.get("price")
-    var dataDate = data.get("date")
+    var fromFormDate = data.get("date")
 
-    console.log("contactInfo - " + dataContactInfo)
-    console.log("startHour - " + dataStartHour)    
+    var tempDate = new Date(fromFormDate);
+    var dataDate = tempDate.setDate(tempDate.getDate() + 1);
 
-    if (!(dataContactInfo && dataContactType && dataStartHour && dataEndHour && dataPrice && dataDate)) {
-      alert("You must fill in all fields to submit a Marketplace post!")
-      return;
-    }
+    /*
+    console.log("dataDate - " + dataDate)
+    console.log("dataDate - " + dataDate) 
+    console.log("type - " + typeof dataDate)
+    console.log("dataContactType - " + dataContactType)
+    */
+
 
     try{
-        console.log("hit try")
+
+      // alerts if inputted is insufficient or 
+        const requiredFields = ['price', 'date', 'contactInfo', 'contactType', 'startHour', 'endHour'];
+        const missingFields = requiredFields.filter(field => !data.get(field));
+        if (missingFields.length > 0) {
+          alert("Must fill in all fields before submitting a post!");
+          return;
+        }
+
         if (dataEndHour < dataStartHour) {
             alert("Start time must be before end time");
             return;
         }
         
-        console.log("hour calculatations")
-
         if ( (dataPrice * 100) % 1 || dataPrice < 0) {
             alert("Price must have 2 decimals and nonnegative ")
             return;
@@ -130,16 +135,16 @@ export default function MarketplaceAdd() {
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth sx={{ my: 2 }}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker 
-                    id = "date"
-                    name = "date"
-                    label="Choose a date" 
-                    required
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
+              <InputLabel >Date</InputLabel>
+                <input type="date" 
+                  id = "date"
+                  name = "date"
+                  required min={(new Date(Date.now() - 86400000)).toISOString().split("T")[0]}   
+                  placeholder="Day Available"
+                  min={(new Date(Date.now() - 86400000)).toLocaleDateString('en-CA')}   
+                  placeholder="Day Available"
+                  min={(new Date()).toLocaleDateString('en-CA')}
+                />
               </Grid>
 
               <Grid item xs={12} sm={6}>
@@ -164,7 +169,7 @@ export default function MarketplaceAdd() {
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <InputLabel>Start Hour</InputLabel>
+                <InputLabel>Start Time</InputLabel>
                 <TextField
                   fullWidth
                   id="startHour"
@@ -176,7 +181,7 @@ export default function MarketplaceAdd() {
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <InputLabel >End Hour</InputLabel>
+                <InputLabel >End Time</InputLabel>
                 <TextField
                   fullWidth
                   id="endHour"

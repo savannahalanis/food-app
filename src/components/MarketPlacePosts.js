@@ -1,4 +1,4 @@
-import {Card, Typography, Grid, Avatar, CardContent, Box} from  "@mui/material";
+import {Card, Typography, Grid, Avatar, CardContent, Box, FormControl, InputLabel, Select, MenuItem} from  "@mui/material";
 import "./Card.css";
 import Image from '../static/background3.png'
 
@@ -6,19 +6,16 @@ import React, { useEffect, useState } from 'react';
 import { db } from '../Firebase.js'
 import {getDocs, getDoc, collection, addDoc, deleteDoc, updateDoc, doc, serverTimestamp, Timestamp, orderBy, query, limit, where, direction, getFirestore} from 'firebase/firestore'
 
-import {useDetermineUser, currentDate, getNameFromID, twentyFourHourToTwelve} from './MarketPlaceFunctions.js'
+import {useDetermineUser, currentDate, getNameFromID, twentyFourHourToTwelve, convertUTCToLocal } from './MarketPlaceFunctions.js'
   
 
 export default function MarketPlacePosts() {
 
   const  {user, userDocID} = useDetermineUser();
-  console.log("UserDocID - " + userDocID)
 
 
   const [marketplaceList, setMarketplaceList] = useState([]);
   const [filterBy, setFilterBy] = useState("date")
-
-  // NEW POST STATES
 
   const getMarketplaceList = async () => {
 
@@ -31,28 +28,66 @@ export default function MarketPlacePosts() {
           });
   
           const resolvedPosts = await Promise.all(posts);
+          console.log(resolvedPosts)
           setMarketplaceList(resolvedPosts);
       } catch (error) {
           console.error('Error fetching marketplace data:', error);
       }
   };
 
+  const handleFilter = () => {
+    if (filterBy === 'date') {
+        console.log("hit date filter")
+        getMarketplaceList();
+    } else if (filterBy === 'price') {
+      console.log("hit price filter")
+        const sortedByPrice = [...marketplaceList].sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+        setMarketplaceList(sortedByPrice);
+    }
+};
+
 
   useEffect(() => {
       getMarketplaceList();
   }, []);
 
-    useEffect(() => {
-      getMarketplaceList();
-  }, [marketplaceList]);
 
-
-
-
+  useEffect(() => {
+    setFilterBy("price");
+    handleFilter();
+    console.log("used Effect")
+}, []);
   
+  console.log("before return - " + filterBy)
 
     return(
       <div>
+      <Card sx={{ minWidth: 275, m: "2em" }}>
+      <CardContent>
+        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+          Filter by date or price!
+        </Typography>
+
+        <FormControl fullWidth sx={{ my: 2 }}>
+          <InputLabel id="filter-label">Filter</InputLabel>
+          <Select
+            labelId="price-select-label"
+            id="price-select"
+            label="filter"
+            value = {filterBy}
+            onChange={(e) => {
+              setFilterBy(e.target.value)
+              handleFilter()
+              console.log("e.target.valeu - " + e.target.value)
+            }}
+          >
+            <MenuItem value="price">Date</MenuItem>
+            <MenuItem value="date">Price</MenuItem>
+          </Select>
+        </FormControl>
+      
+      </CardContent>
+    </Card>
         {marketplaceList.map((post, index) =>
           <div key={index}>
               <ul>
@@ -121,3 +156,4 @@ function Post ({listing}) {
         </>
     )
 }
+ 

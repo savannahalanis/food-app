@@ -16,7 +16,6 @@ export default function Marketplace() {
             <Link to="/marketplaceadd">
                 <Button variant = "contained" sx = {{color: "white", mt: "2em", ml: "2em"}}>+ Add Post</Button>
             </Link>
-                <MarketplaceFilter />
             </Grid>
         </Grid>
     </>
