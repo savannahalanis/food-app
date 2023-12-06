@@ -17,7 +17,7 @@ export const getNameFromID = async(userID) => {
     try {
         const userDocRef = doc(collection(db, 'Users'), userID);
         const userDoc = await getDoc(userDocRef);
-
+        console.log(userDoc);
         if (!userDoc.exists) {
             return "User not found";
         }

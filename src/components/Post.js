@@ -14,6 +14,7 @@ import { Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import "./Card.css";
 import { Card } from '@mui/material';
+import {getNameFromID} from './MarketPlaceFunctions.js';
 
 export const LikeButton = ({id}) => {
    const [liked, setLiked] = useState(false);
@@ -48,7 +49,10 @@ export const LikeButton = ({id}) => {
 }
 
 
-function CommentList({comments}) {
+function CommentList({ comments }) {
+   if (!Array.isArray(comments)) {
+      return <div>No comments to display</div>;
+  }
    return (
          <ListItem disableGutters>
             {Array.isArray(comments) && comments.map((comment, index) => (
@@ -66,7 +70,11 @@ export const Post = ({post}) => {
       const fetchComments = async () => {
         try {
           const postDocSnapshot = await getDoc(doc(db, 'Food_Post', post.id));
+          console.log("postDocSnapshot: ", postDocSnapshot.data().comments);
           setCommentList(postDocSnapshot.data().comments || []);
+          console.log("post id (for posts): ", post.uid);
+          post.userName = (await getNameFromID(post.uid) || "anonymous");
+          console.log("username (for posts): ", post.userName);
         } catch (error) {
           console.error('Error fetching comments:', error);
         }
@@ -95,9 +103,9 @@ export const Post = ({post}) => {
    return(
       <>
       <Card className = "card" style = {{background:"white", width:"520px", padding: "1em" }}>
-         <h1>username: {post.uid}</h1><br /> {/*TODO: pass in value*/}
-         <Typography variant = "h3"><Link style={{color: "inherit"}}>username</Link></Typography> <br /> {/*TODO: pass in value*/}
+       
          <img src={post.image} height="500px" width="500px" /> <br />
+         <Typography variant = "h4">{post.userName}</Typography>   
          <div className="rowcontainer">
             <LikeButton id={post.id}></LikeButton>
             &nbsp;

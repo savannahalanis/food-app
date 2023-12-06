@@ -9,7 +9,8 @@ import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
  import { db } from '../Firebase.js'
-import { getDocs, collection, updateDoc, doc, getDoc, where, query } from 'firebase/firestore';
+import { getDocs, collection, updateDoc, doc, getDoc, where, query,deleteDoc } from 'firebase/firestore';
+import { Button } from '@mui/material';
 
 
 
@@ -20,7 +21,7 @@ function Name({name})
   )
 }
 
-function Posts() {
+function Posts({user, numPosts, setNumPosts}) {
    const [posts, setPosts] = useState([]);
 
    useEffect(() => {
@@ -36,9 +37,15 @@ function Posts() {
 
       fetchData().then((filteredData) => {
          setPosts(filteredData);
-        
+         setNumPosts(filteredData.length);
       });
-   }, []);
+   }, [setNumPosts]);
+
+   const deletePost = async(id) => {
+    const postDoc = doc(db, "Food_Post", id)
+    await deleteDoc(postDoc);
+    setPosts((oldPostList) => oldPostList.filter((post) => post.id !== id));
+ }
 
 
    return (
@@ -54,26 +61,31 @@ function Posts() {
          />
           <ImageListItemBar
                     title={item.title}
-                    subtitle={item.author}
+                    
                     position="below"
                  />
+            <Button onClick={() => deletePost(user.id)} sx={{align:"left"}}>Delete Post</Button>
          </ImageListItem>
+        
       
-      ))}
+      ))
+      
+      }
       </ImageList>
       </>
    );
 }
 
-function NumPosts({numPosts})
-{
-  return(
+function NumPosts({ numPosts}) {
+
+  return (
     <div align="center">
-     <Typography variant="h5">{numPosts}</Typography>
-    <Typography variant="h5">Posts</Typography>
+      <Typography variant="h5">{numPosts}</Typography>
+      <Typography variant="h5">Posts</Typography>
     </div>
-  )
+  );
 }
+
 
 function Followers({followercount})
 {
@@ -96,9 +108,11 @@ function Following({followingcount})
 }
 
 
+
 export default function UserPage() {
    const location = useLocation();
   const { state } = location;
+  const [numPosts, setNumPosts] = useState(0);
   // const { user } = state || {};
   // const parsedUser = user ? JSON.parse(user) : null;
   const [user, setUser] = useState(null);
@@ -116,6 +130,7 @@ export default function UserPage() {
       const userDoc = doc(db, "Users", userQuerySnapshot.docs[0].id);
       const userSnapshot = await getDoc(userDoc);
       setUserData(userSnapshot.data());
+      
     } else {
       setUser(null);
     }
@@ -149,7 +164,7 @@ export default function UserPage() {
             </Typography>
          </Grid>
          <Grid item xs={1} sx={{marginTop:"20px"}}>
-         <NumPosts numPosts="2" />
+         <NumPosts numPosts={numPosts}/>
         </Grid>
         <Grid item xs={1} sx={{marginTop:"20px"}}>
          <Followers followercount={userData?.followers?.length || 0} />
@@ -162,7 +177,7 @@ export default function UserPage() {
       
       
       <Grid container spacing={2} class = "center rowcontainer">
-         <Posts />
+         <Posts user={user} numPosts={numPosts} setNumPosts={setNumPosts}/>
       </Grid>
   
     </div>

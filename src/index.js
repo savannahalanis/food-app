@@ -54,7 +54,7 @@ root.render(
           <Route path = "/marketplaceadd" element={<MarketplaceAdd />}/>
           <Route path = "/home" element={<Home  />}/>
           <Route path = "/homeadd" element={<HomeAdd />}/>
-          
+          <Route path = "/userpage" element={<UserPage />}/>
           <Route path = "/otheruserpage" element={<OtherUserPage />}/>
         </Routes>
       </BrowserRouter>

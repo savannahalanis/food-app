@@ -4,13 +4,14 @@ import { getFirestore } from "firebase/firestore";
 import {getStorage} from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCDFNpkTqGeImKfhztJFdv7ObG_LEtg-JU",
-  authDomain: "post-database-a9f99.firebaseapp.com",
-  projectId: "post-database-a9f99",
-  storageBucket: "post-database-a9f99.appspot.com",
-  messagingSenderId: "657626490668",
-  appId: "1:657626490668:web:63e555048bd48c04c66e89",
-  measurementId: "G-X0QN04Y00L"
+  apiKey: "AIzaSyBVHJGnWw1lABpcAtlxLBhofhVpq4x8_W4",
+  authDomain: "chew-cla.firebaseapp.com",
+  databaseURL: "https://chew-cla-default-rtdb.firebaseio.com",
+  projectId: "chew-cla",
+  storageBucket: "chew-cla.appspot.com",
+  messagingSenderId: "655644247150",
+  appId: "1:655644247150:web:daa23e1f4c7530f6c1527f",
+  measurementId: "G-DNWPKD3L58"
 };
 
 // Initialize Firebase
