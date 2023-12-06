@@ -1,4 +1,4 @@
-import {Card, Typography, Grid, Avatar, CardContent, Box} from  "@mui/material";
+import {Card, Typography, Grid, Avatar, CardContent, Box, FormControl, InputLabel, Select, MenuItem} from  "@mui/material";
 import "./Card.css";
 import Image from '../static/background3.png'
 
@@ -16,8 +16,6 @@ export default function MarketPlacePosts() {
 
   const [marketplaceList, setMarketplaceList] = useState([]);
   const [filterBy, setFilterBy] = useState("date")
-
-  // NEW POST STATES
 
   const getMarketplaceList = async () => {
 
@@ -37,22 +35,50 @@ export default function MarketPlacePosts() {
       }
   };
 
+  const handleFilter = () => {
+    if (filterBy === 'date') {
+        getMarketplaceList();
+    } else if (filterBy === 'price') {
+        const sortedByPrice = [...marketplaceList].sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+        setMarketplaceList(sortedByPrice);
+    }
+};
+
 
   useEffect(() => {
       getMarketplaceList();
   }, []);
-
-    useEffect(() => {
-      getMarketplaceList();
-  }, [marketplaceList]);
-
-
-
-
   
 
     return(
       <div>
+      <Card sx={{ minWidth: 275, m: "2em" }}>
+      <CardContent>
+        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+          Filter by date or price!
+        </Typography>
+
+        <FormControl fullWidth sx={{ my: 2 }}>
+          <InputLabel id="filter-label">Filter</InputLabel>
+          <Select
+            labelId="price-select-label"
+            id="price-select"
+            label="Price"
+            onChange={(e) => {
+              setFilterBy(e.target.value)
+              handleFilter()}}
+          >
+            <MenuItem value="price">Date</MenuItem>
+            <MenuItem value="date">Price</MenuItem>
+          </Select>
+        </FormControl>
+      
+      <Typography> {/*Temporary display for availability*/}
+        There are options available!
+        No options available
+      </Typography>
+      </CardContent>
+    </Card>
         {marketplaceList.map((post, index) =>
           <div key={index}>
               <ul>
@@ -77,9 +103,6 @@ function Post ({listing}) {
           <Grid item xs={8}>
             <Typography variant="h5" noWrap>
               {listing.userName}
-            </Typography>
-            <Typography variant="subtitle2" noWrap>
-              TODO: extra info
             </Typography>
             
           </Grid>
