@@ -234,16 +234,14 @@ function Reviews() {
 
    const updateRating = async (newRating, name) => {
       if (newRating != null) {
-
-         if (name == 'bplate') {
-            const oldArr = reviews[0].arr
-            const newArr = oldArr
-            newArr.push(newRating)
-            reviews[0].arr = newArr
-            console.log(reviews[0].arr)
-         }
-         reviews[0].avg = (reviews[0].arr.reduce((a, b) => a + b, 0)) / reviews[0].arr.length
-         setAverage(reviews[0].avg)
+         const v = name
+         const oldArr = reviews[v].arr
+         const newArr = oldArr
+         newArr.push(newRating)
+         reviews[v].arr = newArr
+         console.log(reviews[v].arr)
+         reviews[v].avg = (reviews[v].arr.reduce((a, b) => a + b, 0)) / reviews[v].arr.length
+         setAverage(reviews[v].avg)
       }
    }
 
@@ -258,8 +256,8 @@ function Reviews() {
                      loading="lazy"
                   />
                   <ImageListItemBar
-                     title={item.name}
-                     subtitle={average}
+                     title={item.title}
+                     subtitle={"eggs: " + item.avg}
                      position="top"
                   />
                   <div class = "right">
