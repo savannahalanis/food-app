@@ -120,27 +120,40 @@ function SearchBar(props) {
    const [searchQuery, setSearchQuery] = useState('');
    const [searchInput, setSearchInput] = useState('');
    const [userList, setUserList] = useState([]);
+   const [userData, setUserData] = useState(null);
    const [condition, setCondition] = useState(false);
+   const [access, setAccess] = useState(false);
    const [findFollowing, setFindFollowing] = useState(false);
    const userCollectionRef = collection(db, "Users")
    const { user } = props;
    console.log("User: ");
    console.log(user);
-   const handleChange = (event) => {
-      setFindFollowing(event.target.checked);
-    };
-
-    const getUserList = async () => {
+   const getUserList = async () => {
       const data = await getDocs(userCollectionRef);
       const filteredData = data.docs.map((doc) => ({...doc.data(), id: doc.id}));
       setCondition(true);
       setUserList(filteredData);
       setSearchQuery(searchInput);
-
+      console.log(findFollowing);
+      
+      setAccess(false);
+      if(findFollowing){   
+         const userQuery = query(collection(db, "Users"), where("uid", "==", user.uid));
+         const userQuerySnapshot = await getDocs(userQuery);
+         console.log("Here")
+         if (!userQuerySnapshot.empty) {
+            const userDoc = doc(db, "Users", userQuerySnapshot.docs[0].id);
+            const userSnapshot = await getDoc(userDoc);
+            setUserData(userSnapshot.data());
+            setAccess(true);
+         }
+         console.log("WE HWRE")
+         console.log(userData)
+      }
   };
   
    const filteredUsers = userList.filter(u =>
-      u.displayName.toLowerCase().includes(searchQuery.toLowerCase())
+      u.displayName.toLowerCase().includes(searchQuery.toLowerCase()) && (!access || userData.following.includes(u.id))
    );
 
  
@@ -167,9 +180,8 @@ function SearchBar(props) {
        <FormControlLabel
          control={
             <Checkbox
-               checked={findFollowing}
-               onChange={handleChange}
-               color="primary"
+               //checked={findFollowing}
+               onChange={(e) => setFindFollowing(e.target.checked)}
             />
          }
          label="Filter friends only"
