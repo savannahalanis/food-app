@@ -51,7 +51,7 @@ export const LikeButton = ({id}) => {
 function CommentList({comments}) {
    return (
          <ListItem disableGutters>
-            {comments.map((comment, index) => (
+            {Array.isArray(comments) && comments.map((comment, index) => (
                <ListItemText primary={comment}/>
             ))}
          </ListItem>
