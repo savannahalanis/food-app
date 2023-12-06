@@ -2,6 +2,7 @@ import Navbar from "../components/Navbar";
 import { Card, CardContent, Grid, TextField, Typography, InputLabel, Button } from "@mui/material";
 import "../components/Card.css";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Box from '@mui/material/Box';
 import { Link } from "react-router-dom";
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -13,12 +14,13 @@ import React, { useEffect, useState } from 'react';
 import { db } from '../Firebase.js'
 import {getDocs, getDoc, collection, addDoc, deleteDoc, updateDoc, doc, serverTimestamp, Timestamp, orderBy, query, limit, where, direction, getFirestore} from 'firebase/firestore'
 
-import {removeTrailingZeros, dateToTimestamp, DetermineUser} from '../components/MarketPlaceFunctions.js'
+import {removeTrailingZeros, dateToTimestamp, useDetermineUser} from '../components/MarketPlaceFunctions.js'
 
 import {HomePage} from "./Home.js"
 
 
 export default function MarketplaceAdd() {
+  
   const [newContactInfo, setContactInfo] = useState('');
   const [newContactType, setContactType] = useState('');
   const [newStartHour, setStartHour] = useState('');
@@ -27,36 +29,68 @@ export default function MarketplaceAdd() {
   const [newDate, setDate] = useState('');
   const marketplaceCollectionRef = collection(db, "Selling_Post")
 
-  const onSubmitMarketplacePost = async () => {
-    var userID = "zIovCBJ7mt1tvNjeQ2rR" // TODO: FIXME
+  const  {user, userDocID} = useDetermineUser();
+  console.log("ADDING UserDocID - " + userDocID)
+
+  const onSubmitMarketplacePost = async (event) => {
+
+    event.preventDefault();
+
+    console.log("hit submit!!")
+
+    const data = new FormData(event.currentTarget);
+    console.log("Form Data:", data);
+
+
+    var dataContactInfo = data.get("contactInfo")
+    var dataContactType = (data.get("contactType"))
+    var dataStartHour = data.get("startHour")
+    var dataEndHour = data.get("endHour")
+    var dataPrice = data.get("price")
+    var dataDate = data.get("date")
+
+    console.log("contactInfo - " + dataContactInfo)
+    console.log("startHour - " + dataStartHour)    
+
+    if (!(dataContactInfo && dataContactType && dataStartHour && dataEndHour && dataPrice && dataDate)) {
+      alert("You must fill in all fields to submit a Marketplace post!")
+      return;
+    }
 
     try{
-        if (newEndHour < newStartHour) {
+        console.log("hit try")
+        if (dataEndHour < dataStartHour) {
             alert("Start time must be before end time");
             return;
         }
-  
-        if ( (newPrice * 100) % 1 || newPrice < 0) {
+        
+        console.log("hour calculatations")
+
+        if ( (dataPrice * 100) % 1 || dataPrice < 0) {
             alert("Price must have 2 decimals and nonnegative ")
             return;
         }
+
+        console.log("price calculations")
   
         await addDoc(marketplaceCollectionRef, {
-            contactInfo: newContactInfo,
-            contactType: newContactType,
-            startHour: newStartHour,
-            endHour: newEndHour,
-            price: removeTrailingZeros(newPrice),
-            uid: userID,
-            date: dateToTimestamp(newDate)
+            contactInfo: dataContactInfo,
+            contactType: dataContactType,
+            startHour: dataStartHour,
+            endHour: dataEndHour,
+            price: removeTrailingZeros(dataPrice),
+            uid: userDocID,
+            date: dateToTimestamp(dataDate)
         });
+
+        alert("Sucessfully submitted!!")
   
         // reload page to (temporarily??) fix issue that "where" and first "orderBy" must be same type
     }catch(err){
         console.error(err)
     }
   }
-  
+
   return (
     <>
       <Navbar />
@@ -71,6 +105,8 @@ export default function MarketplaceAdd() {
           </Button>
         </Link>
       </div>
+
+      <form noValidate onSubmit={onSubmitMarketplacePost} sx={{ mt: 3 }}>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
         <Card className="card" sx={{ maxWidth: 600, margin: 'auto', mt: 2 }}>
           <CardContent>
@@ -84,14 +120,11 @@ export default function MarketplaceAdd() {
                 <TextField
                   fullWidth
                   id="price"
+                  name ="price"
                   variant="standard"
                   type = "number"
                   InputProps={{
                     startAdornment: <Typography>$</Typography>
-                  }}
-                  onChange={(e) => {
-                    setPrice(e.target.value)
-                    console.log("Price changed!!!", e.target.value);
                   }}
                 />
               </Grid>
@@ -100,10 +133,9 @@ export default function MarketplaceAdd() {
                 <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth sx={{ my: 2 }}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker 
+                    id = "date"
+                    name = "date"
                     label="Choose a date" 
-                    onChange={
-                      console.log("Date changed!!")
-                    }
                     required
                     />
                   </DemoContainer>
@@ -114,13 +146,10 @@ export default function MarketplaceAdd() {
                 <InputLabel >Contact Information</InputLabel>
                 <TextField
                   fullWidth
-                  id="title"
+                  id="contactInfo"
+                  name="contactInfo"
                   variant="standard"
                   required
-                  onChange={(e) => {
-                    setContactInfo(e.target.value)
-                    console.log("Contact info changed!!!", e.target.value);
-                  }}
                 />
               </Grid>
 
@@ -128,12 +157,9 @@ export default function MarketplaceAdd() {
                 <InputLabel>Contact Type</InputLabel>
                 <TextField
                   fullWidth
-                  id="additional-text"
+                  id="contactType"
+                  name="contactType"
                   variant="standard"
-                  onChange={(e) => {
-                    console.log("Contact type changed!!!", e.target.value);
-                    setContactType(e.target.value)
-                  }}
                 />
               </Grid>
 
@@ -141,13 +167,10 @@ export default function MarketplaceAdd() {
                 <InputLabel>Start Hour</InputLabel>
                 <TextField
                   fullWidth
-                  id="time"
+                  id="startHour"
+                  name="startHour"
                   type = "time"
                   variant="standard"
-                  onChange={(e) => {
-                    setStartHour(e.target.value)
-                    console.log("Start hour changed!!!", e.target.value);
-                  }}
                   required
                 />
               </Grid>
@@ -156,23 +179,24 @@ export default function MarketplaceAdd() {
                 <InputLabel >End Hour</InputLabel>
                 <TextField
                   fullWidth
-                  id="contact"
+                  id="endHour"
+                  name="endHour"
                   type = "time"
                   variant="standard"
-                  onChange={(e) => {
-                    console.log("End hour changed!!!", e.target.value);
-                    setEndHour(e.target.value)
-                  }}
                   required
                 />
               </Grid>
+
               <Grid item xs={6}>
-                <Button onClick={onSubmitMarketplacePost} variant="contained" sx={{ color: "white" }}>Submit</Button>
+                <Button type="submit" variant="contained" sx={{ color: "white" }}>Submit</Button>
               </Grid>
+
             </Grid>
           </CardContent>
         </Card>
       </div>
+      </form>
+
     </>
   );
 }

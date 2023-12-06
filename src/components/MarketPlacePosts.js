@@ -6,10 +6,14 @@ import React, { useEffect, useState } from 'react';
 import { db } from '../Firebase.js'
 import {getDocs, getDoc, collection, addDoc, deleteDoc, updateDoc, doc, serverTimestamp, Timestamp, orderBy, query, limit, where, direction, getFirestore} from 'firebase/firestore'
 
-import {currentDate, getNameFromID, twentyFourHourToTwelve} from './MarketPlaceFunctions.js'
+import {useDetermineUser, currentDate, getNameFromID, twentyFourHourToTwelve} from './MarketPlaceFunctions.js'
   
 
 export default function MarketPlacePosts() {
+
+  const  {user, userDocID} = useDetermineUser();
+  console.log("UserDocID - " + userDocID)
+
 
   const [marketplaceList, setMarketplaceList] = useState([]);
   const [filterBy, setFilterBy] = useState("date")
@@ -17,6 +21,7 @@ export default function MarketPlacePosts() {
   // NEW POST STATES
 
   const getMarketplaceList = async () => {
+
       try {
           const data = await getDocs(query(collection(db, "Selling_Post"), where("date", ">=", currentDate()), orderBy(filterBy)));
           const posts = data.docs.map(async (doc) => {
@@ -36,6 +41,15 @@ export default function MarketPlacePosts() {
   useEffect(() => {
       getMarketplaceList();
   }, []);
+
+    useEffect(() => {
+      getMarketplaceList();
+  }, [marketplaceList]);
+
+
+
+
+  
 
     return(
       <div>

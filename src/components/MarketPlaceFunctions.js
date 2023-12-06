@@ -34,7 +34,6 @@ export function twentyFourHourToTwelve(dateString) {
 
     var [hour, minute] = dateString.split(':'); 
     hour = parseInt(hour)
-    console.log(hour)
     var ending = ""
     if (parseInt(hour) < 12 ) {
         var ending = "AM";
@@ -75,46 +74,32 @@ export function dateToTimestamp(dateString) {
     return currentDateTimestamp; 
 }
 
-export function DetermineUser() {
+export function useDetermineUser() {
     const location = useLocation();
     const { state } = location;
-    // const { user } = state || {};
-    // const parsedUser = user ? JSON.parse(user) : null;
     const [user, setUser] = useState(null);
-    const userCollection = collection(db, "Users")
     const auth = getAuth();
     const [userData, setUserData] = useState(null);
     const [userDocID, setUserDocID] = useState(null);
   
-  
-    onAuthStateChanged(auth, async(user) => {
-      if (user) {
-        setUser(user);
-        const userQuery = query(collection(db, "Users"), where("uid", "==", user.uid));
-        const userQuerySnapshot = await getDocs(userQuery);
-  
-        const userDoc = doc(db, "Users", userQuerySnapshot.docs[0].id);
-        const userSnapshot = await getDoc(userDoc);
-        setUserData(userSnapshot.data());
-        setUserDocID(userSnapshot.id);
-      } else {
-        setUser(null);
-      }
-    });
-    console.log(user);
-  
     useEffect(() => {
-     const unsubscribe = onAuthStateChanged(auth, (user) => {
-       if (user) {
-         setUser(user);
-       } else {
-         setUser(null);
-       }
-     });
-   
-     // Cleanup the subscription when the component unmounts
-     return () => unsubscribe();
-   }, [auth]);
-
-   return user;
-}
+      const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          setUser(user);
+          const userQuery = query(collection(db, "Users"), where("uid", "==", user.uid));
+          const userQuerySnapshot = await getDocs(userQuery);
+  
+          const userDoc = doc(db, "Users", userQuerySnapshot.docs[0].id);
+          const userSnapshot = await getDoc(userDoc);
+          setUserData(userSnapshot.data());
+          setUserDocID(userSnapshot.id);
+        } else {
+          setUser(null);
+        }
+      });
+  
+      return () => unsubscribe();
+    }, [auth]);
+  
+    return { user, userDocID };
+  }
