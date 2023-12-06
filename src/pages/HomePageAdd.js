@@ -31,39 +31,7 @@ import {v4} from 'uuid';
   const [searchQuery, setSearchQuery] = useState('');
   const [findVeg, setFindVeg] = useState(false);
 
-  const imageListRef = ref(storage, "/food_post_images/")
-
-  const getPostList = async () => {
-    const data = await getDocs(postCollectionRef);
-    const filteredData = data.docs.map((doc) => ({...doc.data(), id: doc.id}));
-    setPostList(filteredData)
-  };
-
-
-  useEffect(() => {
-    getPostList();
-  }, []);
-
-  const onSubmitPost = async () => {
-    
-    
-    
-
-    try{
-        
-        await addDoc(postCollectionRef, {
-            
-            veg: newVeg,
-            likes: newLikes,
-        });
-        alert("Successfully posted!");
-        getPostList();
-
-    }catch(err){
-      console.log("HERE IS THE ERROR WE FOUND!!");
-      console.error(err);
-    }
-  };  
+  const imageListRef = ref(storage, "/food_post_images/");
   
   const filteredPosts = postList.filter(post =>
     (post.title.toLowerCase().includes(searchQuery.toLowerCase()) 
@@ -111,7 +79,6 @@ export default function HomeAdd() {
         await uploadBytesResumable(imageRef, imageUpload);
         const imageURL = await getDownloadURL(imageRef);
         await addDoc(postCollectionRef, {
-          uid: "IT5",
           title: newTitle,
           text: newText,
           date: serverTimestamp(),
