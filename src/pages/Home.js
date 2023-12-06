@@ -20,6 +20,10 @@ import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import {FieldValue} from "firebase/firestore";
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { Check } from '@mui/icons-material';
+
 
 
 
@@ -59,7 +63,7 @@ function Posts() {
             fetchData(setPosts, posts);
          }}
          hasMore={true}
-         loader={<h4>Loading...</h4>}
+         loader={<h4>Loading More...</h4>}
          endMessage={
             <p style={{ textAlign: "center" }}>
                <b>end</b>
@@ -69,8 +73,9 @@ function Posts() {
          <div style={{ minHeight: "100vh" }}>
             {posts.map((user) => (
                <>
+               <Button onClick={() => deletePost(user.id)}>Delete Post</Button>
                   <Post post={user}></Post>
-                  <button onClick={() => deletePost(user.id)}>Delete Post</button>
+                  
                </>
             ))}
          </div>
@@ -121,6 +126,9 @@ function SearchBar(props) {
    const { user } = props;
    console.log("User: ");
    console.log(user);
+   const handleChange = (event) => {
+      setFindFollowing(event.target.checked);
+    };
 
    const getUserList = async () => {
       const data = await getDocs(userCollectionRef);
@@ -145,7 +153,7 @@ function SearchBar(props) {
        autoComplete="off"
      >
       
-      <input type="checkbox" onChange={(e) => setFindFollowing(e.target.checked)}/>     
+     
        <TextField
          id="outlined-basic"
          label="Search friends!"
@@ -154,7 +162,19 @@ function SearchBar(props) {
          value={searchInput}
          onChange={(e) => setSearchInput(e.target.value)}
        />
-       <Button onClick={() => getUserList(searchQuery)}>Search</Button>
+       
+       <FormControlLabel
+         control={
+            <Checkbox
+               checked={findFollowing}
+               onChange={handleChange}
+               color="primary"
+            />
+         }
+         label="Filter friends only"
+         labelPlacement="end"
+         />
+       <Button onClick={() => getUserList(searchQuery)} variant="contained" sx={{color:"white"}}>Search</Button>
 
       {condition && searchQuery && (
         <div>
@@ -248,14 +268,14 @@ function Reviews() {
          <ImageList sx={{ width: 250, height: 750 }} cols="1" >
             {reviews.map((item) => (
                <ImageListItem key={item.img}>
-                  <img
+                  <img 
                      srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
                      src={`${item.img}?w=248&fit=crop&auto=format`}
                      loading="lazy"
                   />
                   <ImageListItemBar
                      title={item.title}
-                     subtitle={"eggs: " + item.avg}
+                     subtitle={"eggs: " + Math.trunc(item.avg * 10) / 10}
                      position="top"
                   />
                   <div class = "right">
@@ -285,14 +305,14 @@ function PostButton() {
          <Link to="/homeadd">
 
             <button style={{
-               color: "#2D68C4", backgroundColor: `${bgColour}`,
+               color: "#2D68C4", backgroundColor: `${bgColour}`, marginTop:"10px",
                width: "250px", height: "60px", fontSize: "20px", border: "3px solid #2D68C4", borderRadius: "10px"
             }}
                onMouseEnter={() => setBgColour("#ADD8E6")}
                onMouseLeave={() => setBgColour("#FFFFFF")}
 
             >
-               New Post
+               +  New Post
             </button>
          </Link>
       </div>
@@ -330,7 +350,7 @@ export default function HomePage(props) {
       <div>
          {user ? (
          <>
-            <p>User: {user.displayName}</p>
+          
             <Navbar></Navbar>
 
             <div class="row" style ={{backgroundColor:"#FAF9F6"}}>

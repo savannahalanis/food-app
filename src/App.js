@@ -48,6 +48,7 @@ function App() {
         createdAt: serverTimestamp(),
         following: [],
         followers: [],
+        numPosts: 0,
       };
 
       try {
