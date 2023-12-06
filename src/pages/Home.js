@@ -69,7 +69,7 @@ function Posts() {
          <div style={{ minHeight: "100vh" }}>
             {posts.map((user) => (
                <>
-                  <Post user={user}></Post>
+                  <Post post={user}></Post>
                   <button onClick={() => deletePost(user.id)}>Delete Post</button>
                </>
             ))}
@@ -128,12 +128,12 @@ function SearchBar(props) {
       setUserList(filteredData)
   };
 
-   // getUserList();
-   console.log(user)
-   
+
+   //getUserList();
    const filteredUsers = userList.filter(user =>
-    user.displayName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+      user.displayName.toLowerCase().includes(searchQuery.toLowerCase())
+   );
+
  
    return (
      <Box
