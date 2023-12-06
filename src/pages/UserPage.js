@@ -9,15 +9,9 @@ import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
  import { db } from '../Firebase.js'
- import { getDocs, collection, updateDoc, doc, getDoc, where, query } from 'firebase/firestore';
+import { getDocs, collection, updateDoc, doc, getDoc, where, query } from 'firebase/firestore';
 
- export const fetchData = async (setPosts, posts) => {
-      const postCollectionRef = collection(db, "Food_Post")
-      const data = await getDocs(postCollectionRef);
-      const filteredData = data.docs.map((doc) => ({...doc.data(), id: doc.id}));
-      setPosts(filteredData);
-      return posts;
-};
+
 
 function Name({name})
 {
@@ -25,28 +19,50 @@ function Name({name})
     <h1>{name}</h1>
   )
 }
-const itemData = []
+
 function Posts() {
-  return (
-     <>
-        <ImageList sx={{ width: 900, height: 750 }} cols="3" >
-           {itemData.map((item) => (
-              <ImageListItem key={item.img}>
-                 <img
-                    srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                    src={`${item.img}?w=248&fit=crop&auto=format`}
-                    alt={item.title}
-                    loading="lazy"
-                 />
-                 <ImageListItemBar
+   const [posts, setPosts] = useState([]);
+
+   useEffect(() => {
+     
+      const fetchData = async () => {
+         try {
+            const postCollectionRef = collection(db, "Food_Post");
+            const data = await getDocs(postCollectionRef);
+            return data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+         } catch (err) {
+         }
+      };
+
+      fetchData().then((filteredData) => {
+         setPosts(filteredData);
+        
+      });
+   }, []);
+
+
+   return (
+      <>
+      <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
+      {posts.map((item) => (
+         <ImageListItem key={item.image}>
+         <img
+            srcSet={`${item.image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+            src={`${item.image}?w=164&h=164&fit=crop&auto=format`}
+            alt={item.title}
+            loading="lazy"
+         />
+          <ImageListItemBar
                     title={item.title}
                     subtitle={item.author}
                     position="below"
                  />
-              </ImageListItem>
-           ))}
-        </ImageList></>
-  );
+         </ImageListItem>
+      
+      ))}
+      </ImageList>
+      </>
+   );
 }
 
 function NumPosts({numPosts})
@@ -126,7 +142,7 @@ export default function UserPage() {
       <Navbar></Navbar>
       <div style={{ padding: 20 }}>
 
-      <Grid container spacing={2} class = "center rowcontainer" >
+      <Grid container spacing={2} className = "center rowcontainer" >
          <Grid item xs={2}>
             <Typography variant="h6" align="left">
                <Name name={user?.displayName || 'Unknown User'} />
@@ -144,11 +160,11 @@ export default function UserPage() {
       </Grid>
 
       
-      {/*}
+      
       <Grid container spacing={2} class = "center rowcontainer">
          <Posts />
       </Grid>
-   */}
+  
     </div>
     </>
    )
