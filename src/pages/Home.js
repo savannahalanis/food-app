@@ -166,7 +166,7 @@ function SearchBar(props) {
                 </div>
             ))}
         </div>
-      )}
+                    )}
      </Box>
    );
  }
