@@ -212,6 +212,9 @@ const StyledRating = styled(Rating)({
 function Reviews() {
    const [reviews, setReviews] = useState([]);
 
+   const[average, setAverage] = useState(0)
+   //item.avg.toString()
+
    useEffect(() => {
 
       const fetchData = async () => {
@@ -230,19 +233,17 @@ function Reviews() {
    }, []);
 
    const updateRating = async (newRating, name) => {
-      if(newRating!=null)
-      {
+      if (newRating != null) {
 
-      if(name == 'bplate')
-      {
-         const oldArr = reviews[0].arr
-         const newArr = oldArr
-         newArr.push(newRating)
-         reviews[0].arr = newArr
-         console.log(reviews[0].arr)
-      }
-      reviews[0].avg = (reviews[0].arr.reduce((a, b) => a + b, 0))/reviews[0].arr.length
-      console.log(reviews[0].avg)
+         if (name == 'bplate') {
+            const oldArr = reviews[0].arr
+            const newArr = oldArr
+            newArr.push(newRating)
+            reviews[0].arr = newArr
+            console.log(reviews[0].arr)
+         }
+         reviews[0].avg = (reviews[0].arr.reduce((a, b) => a + b, 0)) / reviews[0].arr.length
+         setAverage(reviews[0].avg)
       }
    }
 
@@ -250,15 +251,15 @@ function Reviews() {
       <>
          <ImageList sx={{ width: 250, height: 750 }} cols="1" >
             {reviews.map((item) => (
-               <ImageListItem key={item.image}>
+               <ImageListItem key={item.img}>
                   <img
-                     srcSet={`${item.image}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                     src={`${item.image}?w=248&fit=crop&auto=format`}
+                     srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                     src={`${item.img}?w=248&fit=crop&auto=format`}
                      loading="lazy"
                   />
                   <ImageListItemBar
                      title={item.name}
-                     subtitle={item.avg.toString()}
+                     subtitle={average}
                      position="top"
                   />
                   <div class = "right">
