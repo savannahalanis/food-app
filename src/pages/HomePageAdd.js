@@ -15,8 +15,7 @@ import { Link } from "react-router-dom";
 import {v4} from 'uuid';
 
 /*export default function HomeAdd() {
-  const [postList, setPostList] = useState([]);
-  const postCollectionRef = collection(db, "Food_Post")
+ 
 
   //NEW POST STATES
   const [newTitle, setTitle] = useState('');
@@ -80,6 +79,17 @@ export default function HomeAdd() {
   const postCollectionRef = collection(db, "Food_Post");
   const marketplaceCollectionRef = collection(db, "Selling_Post");
 
+  const getPostList = async () => {
+    const data = await getDocs(postCollectionRef);
+    const filteredData = data.docs.map((doc) => ({...doc.data(), id: doc.id}));
+    setPostList(filteredData)
+  };
+
+
+  useEffect(() => {
+    getPostList();
+  }, []);
+
   const onSubmitPost = async (event) => {
 
     event.preventDefault();
@@ -94,6 +104,7 @@ export default function HomeAdd() {
     var newLocation = data.get("location");
     var imageUpload = data.get("image");
 
+    
 
     try{
         const imageRef = ref(storage, `/food_post_images/${imageUpload.name + v4()}`);
@@ -107,10 +118,10 @@ export default function HomeAdd() {
           image: imageURL,
           location: newLocation,
           likes: [],
-          comments: {}
+          comments: []
         });
-        alert("Sucessfully submitted post!!")
-  
+        alert("Sucessfully submitted post!!");
+        getPostList();
     }catch(err){
         console.error(err)
     }
