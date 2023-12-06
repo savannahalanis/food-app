@@ -37,8 +37,10 @@ export default function MarketPlacePosts() {
 
   const handleFilter = () => {
     if (filterBy === 'date') {
+        console.log("hit date filter")
         getMarketplaceList();
     } else if (filterBy === 'price') {
+      console.log("hit price filter")
         const sortedByPrice = [...marketplaceList].sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
         setMarketplaceList(sortedByPrice);
     }
@@ -48,7 +50,15 @@ export default function MarketPlacePosts() {
   useEffect(() => {
       getMarketplaceList();
   }, []);
+
+
+  useEffect(() => {
+    setFilterBy("price");
+    handleFilter();
+    console.log("used Effect")
+}, []);
   
+  console.log("before return - " + filterBy)
 
     return(
       <div>
@@ -63,20 +73,19 @@ export default function MarketPlacePosts() {
           <Select
             labelId="price-select-label"
             id="price-select"
-            label="Price"
+            label="filter"
+            value = {filterBy}
             onChange={(e) => {
               setFilterBy(e.target.value)
-              handleFilter()}}
+              handleFilter()
+              console.log("e.target.valeu - " + e.target.value)
+            }}
           >
             <MenuItem value="price">Date</MenuItem>
             <MenuItem value="date">Price</MenuItem>
           </Select>
         </FormControl>
       
-      <Typography> {/*Temporary display for availability*/}
-        There are options available!
-        No options available
-      </Typography>
       </CardContent>
     </Card>
         {marketplaceList.map((post, index) =>
@@ -103,6 +112,9 @@ function Post ({listing}) {
           <Grid item xs={8}>
             <Typography variant="h5" noWrap>
               {listing.userName}
+            </Typography>
+            <Typography variant="subtitle2" noWrap>
+              TODO: extra info
             </Typography>
             
           </Grid>
@@ -144,3 +156,4 @@ function Post ({listing}) {
         </>
     )
 }
+ 
