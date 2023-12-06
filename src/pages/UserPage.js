@@ -11,7 +11,13 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
  import { db } from '../Firebase.js'
  import { getDocs, collection, updateDoc, doc, getDoc, where, query } from 'firebase/firestore';
 
-
+ export const fetchData = async (setPosts, posts) => {
+      const postCollectionRef = collection(db, "Food_Post")
+      const data = await getDocs(postCollectionRef);
+      const filteredData = data.docs.map((doc) => ({...doc.data(), id: doc.id}));
+      setPosts(filteredData);
+      return posts;
+};
 
 function Name({name})
 {
@@ -19,9 +25,8 @@ function Name({name})
     <h1>{name}</h1>
   )
 }
-
+const itemData = []
 function Posts() {
-   
   return (
      <>
         <ImageList sx={{ width: 900, height: 750 }} cols="3" >
@@ -99,7 +104,7 @@ export default function UserPage() {
       setUser(null);
     }
   });
-  console.log(user);
+  //console.log(user);
 
   useEffect(() => {
    const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -108,13 +113,13 @@ export default function UserPage() {
      } else {
        setUser(null);
      }
+     console.log("what's up")
    });
  
    // Cleanup the subscription when the component unmounts
    return () => unsubscribe();
  }, [auth]);
  
- console.log(userData)
 
    return (
       <>
@@ -139,84 +144,12 @@ export default function UserPage() {
       </Grid>
 
       
-      
+      {/*}
       <Grid container spacing={2} class = "center rowcontainer">
          <Posts />
       </Grid>
+   */}
     </div>
     </>
    )
 }
-
-const itemData = [ //temporary data for reviews
-  {
-     img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-     title: 'De Neve',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-     title: 'Bplate',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-     title: 'Truck 1',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-     title: 'Truck 2',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-     title: 'Cafe 1919',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-     title: 'Cafe 1919',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-     title: 'Cafe 1919',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-     title: 'Cafe 1919',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-     title: 'Cafe 1919',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-     title: 'Cafe 1919',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-     title: 'Cafe 1919',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-     title: 'Cafe 1919',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-     title: 'Cafe 1919',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-     title: 'Cafe 1919',
-     author: '5 Eggs',
-  }
-]

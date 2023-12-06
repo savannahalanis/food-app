@@ -122,9 +122,11 @@ function SearchBar(props) {
   };
 
    getUserList();
+   console.log(user)
+   
    const filteredUsers = userList.filter(user =>
-     user.displayName.toLowerCase().includes(searchQuery.toLowerCase())
-   );
+    user.displayName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
  
    return (
      <Box
@@ -154,7 +156,7 @@ function SearchBar(props) {
                 </div>
             ))}
         </div>
-      )}
+                    )}
      </Box>
    );
  }
