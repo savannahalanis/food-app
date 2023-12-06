@@ -120,10 +120,8 @@ function SearchBar(props) {
       const filteredData = data.docs.map((doc) => ({...doc.data(), id: doc.id}));
       setUserList(filteredData)
   };
-
-   getUserList();
-   console.log(user)
    
+   //getUserList();
    const filteredUsers = userList.filter(user =>
     user.displayName.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -196,64 +194,68 @@ const StyledRating = styled(Rating)({
    },
  });
 
-function Reviews() { {/*TODO: map actual data*/}
+//use update to update
+function Reviews() {
+   const [reviews, setReviews] = useState([]);
+
+   useEffect(() => {
+
+      const fetchData = async () => {
+         try {
+            const postCollectionRef = collection(db, "Ratings");
+            const data = await getDocs(postCollectionRef);
+            return data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+         } catch (err) {
+         }
+      };
+
+      fetchData().then((filteredData) => {
+         setReviews(filteredData);
+
+      });
+   }, []);
+
+   const [rating, setRating] = useState(0);
+
+   const updateRating = async (newRating, name) => {
+      setRating(newRating);
+      const ref = db.collection('Ratings').doc(name);
+      const res = await ref.UpdateAsync('arr', FieldValue.ArrayUnion(newRating));
+      console.log(newRating);
+   }
+
    return (
       <>
-         <ImageList sx={{ width: 300, height: 750 }} cols="1" >
-            {itemData.map((item) => (
-               <ImageListItem key={item.img}>
+         <ImageList sx={{ width: 250, height: 750 }} cols="1" >
+            {reviews.map((item) => (
+               <ImageListItem key={item.image}>
                   <img
-                     srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                     src={`${item.img}?w=248&fit=crop&auto=format`}
-                     alt={item.title}
+                     srcSet={`${item.image}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                     src={`${item.image}?w=248&fit=crop&auto=format`}
                      loading="lazy"
                   />
                   <ImageListItemBar
-                     title={item.title}
-                     subtitle={item.author}
-                     position="below"
+                     title={item.name}
+                     subtitle="5 eggs"
+                     position="top"
                   />
+                  <div class = "right">
                   <StyledRating
                      name="customized-color"
-                     defaultValue={0}
+                     defaultValue={5}
+                     max = {5}
                      getLabelText={(value) => `${value} Egg${value !== 1 ? 's' : ''}`}
                      precision={1}
                      icon={<EggAltIcon fontSize="inherit" />}
                      emptyIcon={<EggIcon fontSize="inherit" />}
-                  />
+                     size = "large"
+                     onChange={(event, newValue) => updateRating(newValue, item.name)}
+                  /></div>
                </ImageListItem>
             ))}
          </ImageList></>
    );
 }
-
-const itemData = [ //temporary data for reviews
-   {
-      img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-      title: 'De Neve',
-      author: '5 Eggs',
-   },
-   {
-      img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-      title: 'Bplate',
-      author: '5 Eggs',
-   },
-   {
-      img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-      title: 'Truck 1',
-      author: '5 Eggs',
-   },
-   {
-      img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-      title: 'Truck 2',
-      author: '5 Eggs',
-   },
-   {
-      img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-      title: 'Cafe 1919',
-      author: '5 Eggs',
-   }
-]
 
 function PostButton() {
    const [bgColour, setBgColour] = useState("#FFFFFF");
@@ -328,7 +330,7 @@ export default function HomePage(props) {
                      <Posts></Posts>
                   </div>
                </div>
-               <div class="column right">
+               <div class="right">
                   <Reviews></Reviews>
                </div>
             </div>
