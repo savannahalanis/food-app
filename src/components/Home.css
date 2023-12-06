@@ -39,7 +39,8 @@
 }
 
 .right {
-   width: 5%;
+   float: right;
+   width: 25%;
 }
  
 .middle {

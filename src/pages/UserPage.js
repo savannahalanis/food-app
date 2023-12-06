@@ -9,7 +9,7 @@ import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
  import { db } from '../Firebase.js'
- import { getDocs, collection, updateDoc, doc, getDoc, where, query } from 'firebase/firestore';
+import { getDocs, collection, updateDoc, doc, getDoc, where, query } from 'firebase/firestore';
 
 
 
@@ -21,27 +21,48 @@ function Name({name})
 }
 
 function Posts() {
-   
-  return (
-     <>
-        <ImageList sx={{ width: 900, height: 750 }} cols="3" >
-           {itemData.map((item) => (
-              <ImageListItem key={item.img}>
-                 <img
-                    srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                    src={`${item.img}?w=248&fit=crop&auto=format`}
-                    alt={item.title}
-                    loading="lazy"
-                 />
-                 <ImageListItemBar
+   const [posts, setPosts] = useState([]);
+
+   useEffect(() => {
+     
+      const fetchData = async () => {
+         try {
+            const postCollectionRef = collection(db, "Food_Post");
+            const data = await getDocs(postCollectionRef);
+            return data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+         } catch (err) {
+         }
+      };
+
+      fetchData().then((filteredData) => {
+         setPosts(filteredData);
+        
+      });
+   }, []);
+
+
+   return (
+      <>
+      <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
+      {posts.map((item) => (
+         <ImageListItem key={item.image}>
+         <img
+            srcSet={`${item.image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+            src={`${item.image}?w=164&h=164&fit=crop&auto=format`}
+            alt={item.title}
+            loading="lazy"
+         />
+          <ImageListItemBar
                     title={item.title}
                     subtitle={item.author}
                     position="below"
                  />
-              </ImageListItem>
-           ))}
-        </ImageList></>
-  );
+         </ImageListItem>
+      
+      ))}
+      </ImageList>
+      </>
+   );
 }
 
 function NumPosts({numPosts})
@@ -99,7 +120,7 @@ export default function UserPage() {
       setUser(null);
     }
   });
-  console.log(user);
+  //console.log(user);
 
   useEffect(() => {
    const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -108,20 +129,20 @@ export default function UserPage() {
      } else {
        setUser(null);
      }
+     console.log("what's up")
    });
  
    // Cleanup the subscription when the component unmounts
    return () => unsubscribe();
  }, [auth]);
  
- console.log(userData)
 
    return (
       <>
       <Navbar></Navbar>
       <div style={{ padding: 20 }}>
 
-      <Grid container spacing={2} class = "center rowcontainer" >
+      <Grid container spacing={2} className = "center rowcontainer" >
          <Grid item xs={2}>
             <Typography variant="h6" align="left">
                <Name name={user?.displayName || 'Unknown User'} />
@@ -143,80 +164,8 @@ export default function UserPage() {
       <Grid container spacing={2} class = "center rowcontainer">
          <Posts />
       </Grid>
+  
     </div>
     </>
    )
 }
-
-const itemData = [ //temporary data for reviews
-  {
-     img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-     title: 'De Neve',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-     title: 'Bplate',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-     title: 'Truck 1',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-     title: 'Truck 2',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-     title: 'Cafe 1919',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-     title: 'Cafe 1919',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-     title: 'Cafe 1919',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-     title: 'Cafe 1919',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-     title: 'Cafe 1919',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-     title: 'Cafe 1919',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-     title: 'Cafe 1919',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-     title: 'Cafe 1919',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-     title: 'Cafe 1919',
-     author: '5 Eggs',
-  },
-  {
-     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-     title: 'Cafe 1919',
-     author: '5 Eggs',
-  }
-]
