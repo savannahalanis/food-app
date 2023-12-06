@@ -111,20 +111,29 @@ const addFollowing = async (user_id, following) => {
 
 function SearchBar(props) {
    const [searchQuery, setSearchQuery] = useState('');
+   const [searchInput, setSearchInput] = useState('');
    const [userList, setUserList] = useState([]);
+   const [condition, setCondition] = useState(false);
+   const [findFollowing, setFindFollowing] = useState(false);
    const userCollectionRef = collection(db, "Users")
    const { user } = props;
+   console.log("User: ");
+   console.log(user);
 
    const getUserList = async () => {
       const data = await getDocs(userCollectionRef);
       const filteredData = data.docs.map((doc) => ({...doc.data(), id: doc.id}));
-      setUserList(filteredData)
+      setCondition(true);
+      setUserList(filteredData);
+      setSearchQuery(searchInput);
   };
-   
-   //getUserList();
-   const filteredUsers = userList.filter(user =>
-    user.displayName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  
+   const filteredUsers = userList.filter(u =>
+      u.displayName.toLowerCase().includes(searchQuery.toLowerCase()) && (!findFollowing || user.following.includes(u.id))
+   );
+   filteredUsers.forEach(user => {
+      console.log(user);
+    });
  
    return (
      <Box
@@ -135,16 +144,19 @@ function SearchBar(props) {
        noValidate
        autoComplete="off"
      >
+      
+      <input type="checkbox" onChange={(e) => setFindFollowing(e.target.checked)}/>     
        <TextField
          id="outlined-basic"
          label="Search friends!"
          variant="outlined"
          inputProps={{ style: { fontSize: 25 } }}
-         value={searchQuery}
-         onChange={(e) => setSearchQuery(e.target.value)}
+         value={searchInput}
+         onChange={(e) => setSearchInput(e.target.value)}
        />
- 
-      {searchQuery && (
+       <Button onClick={() => getUserList(searchQuery)}>Search</Button>
+
+      {condition && searchQuery && (
         <div>
           {filteredUsers.map((curr_user, index) => (
                 <div key={index}>
