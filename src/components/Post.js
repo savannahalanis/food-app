@@ -54,13 +54,11 @@ function CommentList({ comments }) {
       return <div>No comments to display</div>;
   }
    return (
-       <List>
-           {comments.map((comment, index) => (
-               <ListItem key={index} disableGutters>
-                   <ListItemText primary={comment} />
-               </ListItem>
-           ))}
-       </List>
+         <ListItem disableGutters>
+            {Array.isArray(comments) && comments.map((comment, index) => (
+               <ListItemText primary={comment}/>
+            ))}
+         </ListItem>
    );
 }
 
