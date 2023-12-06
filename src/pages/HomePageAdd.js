@@ -111,7 +111,6 @@ export default function HomeAdd() {
         await uploadBytesResumable(imageRef, imageUpload);
         const imageURL = await getDownloadURL(imageRef);
         await addDoc(postCollectionRef, {
-          uid: "IT5",
           title: newTitle,
           text: newText,
           date: serverTimestamp(),
