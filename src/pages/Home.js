@@ -125,17 +125,15 @@ function SearchBar(props) {
    const getUserList = async () => {
       const data = await getDocs(userCollectionRef);
       const filteredData = data.docs.map((doc) => ({...doc.data(), id: doc.id}));
-      setCondition(true);
-      setUserList(filteredData);
-      setSearchQuery(searchInput);
+      setUserList(filteredData)
   };
-  
-   const filteredUsers = userList.filter(u =>
-      u.displayName.toLowerCase().includes(searchQuery.toLowerCase()) && (!findFollowing || user.following.includes(u.id))
-   );
-   filteredUsers.forEach(user => {
-      console.log(user);
-    });
+
+   // getUserList();
+   console.log(user)
+   
+   const filteredUsers = userList.filter(user =>
+    user.displayName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
  
    return (
      <Box
