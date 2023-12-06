@@ -7,7 +7,7 @@ Chew-CLA is an inclusive application designed for students at UCLA to share thei
 3) Users are able to like and comment on other posts.
 4) Users are able to follow and unfollow friends/other users.
 5) Users are able to buy/sell swipes on of the pages from other users on the website.
-6) Users are able to search for posts based on keywords and filer the search by location/food restrictions.
+6) Users are able to search for posts based on keywords and filter the search by location/food restrictions.
 7) Users are able to easily navigate throughout the Chew-CLA website.
 8) Users are able to rate dining halls which are dynamically displayed on the home page.
 
