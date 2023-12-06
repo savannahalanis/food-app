@@ -16,7 +16,7 @@ import "./Card.css";
 import { Card } from '@mui/material';
 import {getNameFromID} from './MarketPlaceFunctions.js';
 
-export const LikeButton = ({id}) => {
+export const LikeButton = ({id, user}) => {
    const [liked, setLiked] = useState(false);
 
    const handleLike = async () => {
@@ -26,9 +26,9 @@ export const LikeButton = ({id}) => {
 
          const currentLikes = postDocSnapshot.data().likes;
 
-         if(!currentLikes.includes('F45'))
+         if(!currentLikes.includes(user))
          {
-            const updatedLikes = [...postDocSnapshot.data().likes, 'F45'];
+            const updatedLikes = [...postDocSnapshot.data().likes, user];
             await updateDoc(postDoc, { likes: updatedLikes });
             alert("User Liked Post!");
             setLiked(!liked);
@@ -107,7 +107,7 @@ export const Post = ({post}) => {
          <img src={post.image} height="500px" width="500px" /> <br />
          <Typography variant = "h4">{post.userName}</Typography>   
          <div className="rowcontainer">
-            <LikeButton id={post.id}></LikeButton>
+            <LikeButton id={post.id} user={post.uid}></LikeButton>
             &nbsp;
             <h3>{post.likes.length} likes</h3>
             </div>
