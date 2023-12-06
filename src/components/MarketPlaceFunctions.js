@@ -68,6 +68,7 @@ export function removeTrailingZeros(numberString) {
 }
 
 export function dateToTimestamp(dateString) {
+    console.log("dateString - " + dateString)
     const currentDate = new Date(dateString);
     currentDate.setHours(0, 0, 0, 0); 
     const currentDateTimestamp = Timestamp.fromDate(currentDate);
@@ -103,3 +104,8 @@ export function useDetermineUser() {
   
     return { user, userDocID };
   }
+
+export const convertUTCToLocal = (utcDateTime) => {
+    const localDate = new Date(utcDateTime.toDate());
+    return localDate.toLocaleString(); // Adjust the format as needed
+};

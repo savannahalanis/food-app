@@ -6,13 +6,12 @@ import React, { useEffect, useState } from 'react';
 import { db } from '../Firebase.js'
 import {getDocs, getDoc, collection, addDoc, deleteDoc, updateDoc, doc, serverTimestamp, Timestamp, orderBy, query, limit, where, direction, getFirestore} from 'firebase/firestore'
 
-import {useDetermineUser, currentDate, getNameFromID, twentyFourHourToTwelve} from './MarketPlaceFunctions.js'
+import {useDetermineUser, currentDate, getNameFromID, twentyFourHourToTwelve, convertUTCToLocal } from './MarketPlaceFunctions.js'
   
 
 export default function MarketPlacePosts() {
 
   const  {user, userDocID} = useDetermineUser();
-  console.log("UserDocID - " + userDocID)
 
 
   const [marketplaceList, setMarketplaceList] = useState([]);
@@ -31,6 +30,7 @@ export default function MarketPlacePosts() {
           });
   
           const resolvedPosts = await Promise.all(posts);
+          console.log(resolvedPosts)
           setMarketplaceList(resolvedPosts);
       } catch (error) {
           console.error('Error fetching marketplace data:', error);
