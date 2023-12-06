@@ -19,6 +19,8 @@ import { styled } from '@mui/material/styles';
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import {FieldValue} from "firebase/firestore";
+
 
 
 //code adapted from https://javascript.works-hub.com/learn/building-a-modular-infinite-scroll-252dd
@@ -227,13 +229,21 @@ function Reviews() {
       });
    }, []);
 
-   const [rating, setRating] = useState(0);
-
    const updateRating = async (newRating, name) => {
-      setRating(newRating);
-      const ref = db.collection('Ratings').doc(name);
-      const res = await ref.UpdateAsync('arr', FieldValue.ArrayUnion(newRating));
-      console.log(newRating);
+      if(newRating!=null)
+      {
+
+      if(name == 'bplate')
+      {
+         const oldArr = reviews[0].arr
+         const newArr = oldArr
+         newArr.push(newRating)
+         reviews[0].arr = newArr
+         console.log(reviews[0].arr)
+      }
+      reviews[0].avg = (reviews[0].arr.reduce((a, b) => a + b, 0))/reviews[0].arr.length
+      console.log(reviews[0].avg)
+      }
    }
 
    return (
@@ -248,7 +258,7 @@ function Reviews() {
                   />
                   <ImageListItemBar
                      title={item.name}
-                     subtitle="5 eggs"
+                     subtitle={item.avg.toString()}
                      position="top"
                   />
                   <div class = "right">
@@ -256,6 +266,7 @@ function Reviews() {
                      name="customized-color"
                      defaultValue={5}
                      max = {5}
+                     min = {0}
                      getLabelText={(value) => `${value} Egg${value !== 1 ? 's' : ''}`}
                      precision={1}
                      icon={<EggAltIcon fontSize="inherit" />}
