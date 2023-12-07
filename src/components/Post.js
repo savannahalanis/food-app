@@ -66,15 +66,23 @@ export const Post = ({post}) => {
    const [comment, setComment] = useState('');
    const [commentList, setCommentList] = useState([]);
 
+   const funct = async () => {
+      const snap = await getDoc(doc(db, 'Food_Post', post.id));
+      post.username = (await getNameFromID(post.uid) || "anonymous");
+      snap.data().username = post.username
+      console.log("HERE: ", post.uid)
+   };
+   useEffect(() => {
+      funct();
+   }, []);  
+
    useEffect(() => {
       const fetchComments = async () => {
         try {
           const postDocSnapshot = await getDoc(doc(db, 'Food_Post', post.id));
           console.log("postDocSnapshot: ", postDocSnapshot.data().comments);
           setCommentList(postDocSnapshot.data().comments || []);
-          console.log("post id (for posts): ", post.uid);
-          post.userName = (await getNameFromID(post.uid) || "anonymous");
-          console.log("username (for posts): ", post.userName);
+          console.log("post id (for posts): ", post.uid);          
         } catch (error) {
           console.error('Error fetching comments:', error);
         }
@@ -105,7 +113,7 @@ export const Post = ({post}) => {
       <Card className = "card" style = {{background:"white", width:"520px", padding: "1em" }}>
        
          <img src={post.image} height="500px" width="500px" /> <br />
-         <Typography variant = "h4">{post.userName}</Typography>   
+         <Typography variant = "h4">{post.username}</Typography>   
          <div className="rowcontainer">
             <LikeButton id={post.id} user={post.uid}></LikeButton>
             &nbsp;
