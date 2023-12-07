@@ -14,33 +14,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Link } from "react-router-dom";
 import {v4} from 'uuid';
 import {useDetermineUser, getNameFromID} from '../components/MarketPlaceFunctions.js'
-
-/*export default function HomeAdd() {
- 
-
-  //NEW POST STATES
-  const [newTitle, setTitle] = useState('');
-  const [newText, setText] = useState('');
-  const [newDate, setDate] = useState(null);
-  const [newLocation, setLocation] = useState('');
-  const [newVeg, setVeg] = useState(false);
-  const [newLikes, setLikes] = useState([]);
-  const [imageUpload, setImageUpload] = useState(null);
-  const [user, newUser] = useState('');
-  
-
-  const [searchQuery, setSearchQuery] = useState('');
-  const [findVeg, setFindVeg] = useState(false);
-
-  const imageListRef = ref(storage, "/food_post_images/");
-  
-  const filteredPosts = postList.filter(post =>
-    (post.title.toLowerCase().includes(searchQuery.toLowerCase()) 
-    || post.text.toLowerCase().includes(searchQuery.toLowerCase()))
-    && (!findVeg || post.veg == findVeg)
-  );
-
-*/
+import Checkbox from '@mui/material/Checkbox'
 
 export default function HomeAdd() {
   const [postList, setPostList] = useState([]);
@@ -71,8 +45,20 @@ export default function HomeAdd() {
     var newTitle = data.get("title");
     var newText = (data.get("text"));
     var newLocation = data.get("location");
-    var imageUpload = data.get("image");    
-
+    var imageUpload = data.get("image");  
+    var vegValue = false;
+    var peanut = false; 
+    if(data.get("veg"))
+    {
+      console.log("This is vegetarian");
+      vegValue = true;
+    }
+    if(data.get("peanut"))
+    {
+      console.log("This contains peanuts");
+      peanut = true;
+    }
+    
     try{
         const imageRef = ref(storage, `/food_post_images/${imageUpload.name + v4()}`);
         await uploadBytesResumable(imageRef, imageUpload);
@@ -86,7 +72,9 @@ export default function HomeAdd() {
           likes: [],
           comments: [],
           uid: userDocID,
-          username: "temp"
+          username: "temp",
+          veg: vegValue,
+          allergy: peanut
         });
         alert("Sucessfully submitted post!!");
         getPostList();
@@ -152,21 +140,33 @@ export default function HomeAdd() {
                         <MenuItem value={"DeNeve"}>DeNeve</MenuItem>
                         <MenuItem value={"B-Plate"}>B-Plate</MenuItem>
                         <MenuItem value={"Epicuria"}>Epicuria</MenuItem>
+                        <MenuItem value={"Feast"}>Feast</MenuItem>
+                        <MenuItem value={"RendeEast"}>Rende East</MenuItem>
+                        <MenuItem value={"RendeWest"}>Rende West</MenuItem>
                       </Select>
                       </FormControl>
                   </Box>
               </Grid>
 
               <Grid item xs={12} sm={6}>
+                <InputLabel>Veg</InputLabel>
+                <Checkbox color="default" id="veg" name="veg"/>
+                <InputLabel>Contains Peanuts</InputLabel>
+                <Checkbox color="default" id="peanut" name="peanut"/>
+              </Grid>
+
+
+              <Grid item xs={12} sm={6} sx={{ marginTop: -10}}>
                   <InputLabel>Choose Image</InputLabel>
                   <input accept="image/*" style={{ display: 'none' }} class="image" name="image" id="raised-button-file" multiple type="file"></input>
                   <label htmlFor="raised-button-file">
-                    <Button variant="contained" component="span" sx={{color:"white"}}>Upload</Button>
+                    <Button variant="contained" component="span" sx={{color:"white"}} >Upload</Button>
                   </label>
               </Grid>
+
               </Grid>
 
-              <Grid item xs={6}>
+              <Grid item xs={6} sx={{ marginTop: 2 }}>
                 <Button type="submit" variant="contained" sx={{ color: "white" }}>Submit</Button>
               </Grid>
 
