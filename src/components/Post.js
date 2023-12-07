@@ -16,7 +16,7 @@ import "./Card.css";
 import { Card } from '@mui/material';
 import {getNameFromID} from './MarketPlaceFunctions.js';
 
-export const LikeButton = ({id, user}) => {
+export const LikeButton = ({id, user, setNumLikes, numLikes}) => {
    const [liked, setLiked] = useState(false);
 
    const handleLike = async () => {
@@ -32,6 +32,7 @@ export const LikeButton = ({id, user}) => {
             await updateDoc(postDoc, { likes: updatedLikes });
             alert("User Liked Post!");
             setLiked(!liked);
+            setNumLikes(numLikes + 1);
          }else{
             alert("User Already Liked Post");
          }
@@ -42,7 +43,7 @@ export const LikeButton = ({id, user}) => {
    };
 
    return (
-      <div style={{ width: "2rem" }}> {/*TODO: update like count ONCE onclick}*/}
+      <div style={{ width: "2rem" }}> 
          <Heart isActive={liked} onClick={() => handleLike()} animationScale={1} style={{ marginTop: '1rem' }} />
       </div>
    );
@@ -54,17 +55,23 @@ function CommentList({ comments }) {
       return <div>No comments to display</div>;
   }
    return (
-         <ListItem disableGutters>
-            {Array.isArray(comments) && comments.map((comment, index) => (
-               <ListItemText primary={comment}/>
-            ))}
+      <>
+       {Array.isArray(comments) && comments.map((comment, index) => (
+         <ListItem disableGutters key={index} >
+            <ListItemText primary={comment}/>
          </ListItem>
+         ))}
+
+      </>
+        
    );
 }
 
 export const Post = ({post}) => {
    const [comment, setComment] = useState('');
    const [commentList, setCommentList] = useState([]);
+   const [numLikes, setNumLikes] = useState(post.likes.length);
+   const [username, setUserName] = useState('');
 
    useEffect(() => {
       const fetchComments = async () => {
@@ -74,6 +81,7 @@ export const Post = ({post}) => {
           setCommentList(postDocSnapshot.data().comments || []);
           console.log("post id (for posts): ", post.uid);
           post.userName = (await getNameFromID(post.uid) || "anonymous");
+          setUserName(post.userName);
           console.log("username (for posts): ", post.userName);
         } catch (error) {
           console.error('Error fetching comments:', error);
@@ -81,7 +89,7 @@ export const Post = ({post}) => {
       };
   
       fetchComments();
-    }, [post.id]);
+    }, []);
 
    const handleComment = async (event, id) => {
       if (event.key === 'Enter') {
@@ -103,14 +111,16 @@ export const Post = ({post}) => {
    return(
       <>
       <Card className = "card" style = {{background:"white", width:"520px", padding: "1em" }}>
-       
+      <Typography variant = "h4">{"@" + username || "@anonymous"}</Typography>   
          <img src={post.image} height="500px" width="500px" /> <br />
-         <Typography variant = "h4">{post.userName}</Typography>   
+         
          <div className="rowcontainer">
-            <LikeButton id={post.id} user={post.uid}></LikeButton>
+        
+            <LikeButton id={post.id} user={post.uid} setNumLikes={setNumLikes} numLikes={numLikes}></LikeButton>
             &nbsp;
-            <h3>{post.likes.length} likes</h3>
+            <h3>{numLikes} likes</h3>
             </div>
+           
          <Typography variant = "h3">{post.title}</Typography>
          <Typography variant = "h5">{post.text}</Typography>
          <div className='rowcontainer'>
