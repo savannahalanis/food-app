@@ -14,12 +14,15 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Link } from "react-router-dom";
 import {v4} from 'uuid';
 import {useDetermineUser, getNameFromID} from '../components/MarketPlaceFunctions.js'
-import Checkbox from '@mui/material/Checkbox'
+import Checkbox from '@mui/material/Checkbox';
+import { useContext } from "react";
+import { Context } from "../context/AuthContext";
+import { useNavigate } from 'react-router-dom';
 
 export default function HomeAdd() {
   const [postList, setPostList] = useState([]);
-  const  {user, userDocID} = useDetermineUser();
-
+  const {user} = useContext(Context);
+  const navigate = useNavigate();
 
   const postCollectionRef = collection(db, "Food_Post");
   const marketplaceCollectionRef = collection(db, "Selling_Post");
@@ -34,9 +37,7 @@ export default function HomeAdd() {
   }, []);
 
   const onSubmitPost = async (event) => {
-
     event.preventDefault();
-
     console.log("hit submit!!");
 
     const data = new FormData(event.currentTarget);
@@ -71,15 +72,17 @@ export default function HomeAdd() {
           location: newLocation,
           likes: [],
           comments: [],
-          uid: userDocID,
+          uid: user.uid,
           username: "temp",
           veg: vegValue,
           allergy: peanut
         });
         alert("Sucessfully submitted post!!");
         getPostList();
+        navigate('/');
     }catch(err){
-        console.error(err)
+        console.error(err);
+        alert("Oops, something went wrong. Please try again");
     }
   }
 

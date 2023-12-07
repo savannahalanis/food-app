@@ -30,11 +30,12 @@ export const LikeButton = ({id, user, setNumLikes, numLikes}) => {
          {
             const updatedLikes = [...postDocSnapshot.data().likes, user];
             await updateDoc(postDoc, { likes: updatedLikes });
-            alert("User Liked Post!");
+            
             setLiked(!liked);
             setNumLikes(numLikes + 1);
          }else{
-            alert("User Already Liked Post");
+            setLiked(!liked);
+            setNumLikes(numLikes - 1);
          }
          
       } catch (error) {

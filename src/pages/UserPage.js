@@ -11,7 +11,8 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
  import { db } from '../Firebase.js'
 import { getDocs, collection, updateDoc, doc, getDoc, where, query,deleteDoc } from 'firebase/firestore';
 import { Button } from '@mui/material';
-
+import { useContext } from "react";
+import { Context } from "../context/AuthContext";
 
 
 function Name({name})
@@ -25,13 +26,15 @@ function Posts({user, numPosts, setNumPosts}) {
    const [posts, setPosts] = useState([]);
 
    useEffect(() => {
-     
       const fetchData = async () => {
          try {
+          console.log("users: ", user.uid); 
             const postCollectionRef = collection(db, "Food_Post");
-            const data = await getDocs(postCollectionRef);
+            const uidQuery = query(postCollectionRef, where("uid", "==", user.uid));
+            const data = await getDocs(uidQuery);
             return data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
          } catch (err) {
+          return [];
          }
       };
 
@@ -110,20 +113,24 @@ function Following({followingcount})
 
 
 export default function UserPage() {
-   const location = useLocation();
+  const location = useLocation();
   const { state } = location;
   const [numPosts, setNumPosts] = useState(0);
   // const { user } = state || {};
   // const parsedUser = user ? JSON.parse(user) : null;
-  const [user, setUser] = useState(null);
+ 
   const userCollection = collection(db, "Users")
   const auth = getAuth();
   const [userData, setUserData] = useState(null);
+  const {user} = useContext(Context);
 
-
-  onAuthStateChanged(auth, async(user) => {
+  useEffect(() => {
+    console.log ("USE EFFECT");
+    getData();
+  }, [])
+  async function getData(){
     if (user) {
-      setUser(user);
+
       const userQuery = query(collection(db, "Users"), where("uid", "==", user.uid));
       const userQuerySnapshot = await getDocs(userQuery);
 
@@ -131,25 +138,8 @@ export default function UserPage() {
       const userSnapshot = await getDoc(userDoc);
       setUserData(userSnapshot.data());
       
-    } else {
-      setUser(null);
-    }
-  });
-  //console.log(user);
-
-  useEffect(() => {
-   const unsubscribe = onAuthStateChanged(auth, (user) => {
-     if (user) {
-       setUser(user);
-     } else {
-       setUser(null);
-     }
-     console.log("what's up")
-   });
- 
-   // Cleanup the subscription when the component unmounts
-   return () => unsubscribe();
- }, [auth]);
+    } 
+  }
  
 
    return (
