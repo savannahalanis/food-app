@@ -113,9 +113,6 @@ function Post ({listing}) {
             <Typography variant="h5" noWrap>
               {listing.userName}
             </Typography>
-            <Typography variant="subtitle2" noWrap>
-              TODO: extra info
-            </Typography>
             
           </Grid>
           <Grid item xs = {2}>
