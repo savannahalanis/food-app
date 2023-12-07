@@ -94,12 +94,12 @@ export const Post = ({post}) => {
    const handleComment = async (event, id, userid) => {
       if (event.key === 'Enter') {
          try {
-         const postDoc = doc(db, 'Food_Post', id);
-         const postDocSnapshot = await getDoc(postDoc);
-         const commenterName = (await getNameFromID(userid) || "anonymous");
-         const updatedComments = [...postDocSnapshot.data().comments, commenterName + ": " + comment];
-         await updateDoc(postDoc, { comments: updatedComments });
-         setCommentList(updatedComments);
+            const postDoc = doc(db, 'Food_Post', id);
+            const postDocSnapshot = await getDoc(postDoc);
+            const commenterName = (await getNameFromID(userid) || "anonymous");
+            const updatedComments = [...postDocSnapshot.data().comments, commenterName + ": " + comment];
+            await updateDoc(postDoc, { comments: updatedComments });
+            setCommentList(updatedComments);
          } catch (error) {
          console.error('Error updating document:', error);
          }

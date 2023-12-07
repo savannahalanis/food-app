@@ -263,6 +263,7 @@ function Reviews() {
             const data = await getDocs(postCollectionRef);
             return data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
          } catch (err) {
+            console.log(err);
          }
       };
 
@@ -274,14 +275,28 @@ function Reviews() {
 
    const updateRating = async (newRating, name) => {
       if (newRating != null) {
-         const v = name
-         const oldArr = reviews[v].arr
-         const newArr = oldArr
-         newArr.push(newRating)
-         reviews[v].arr = newArr
-         console.log(reviews[v].arr)
-         reviews[v].avg = (reviews[v].arr.reduce((a, b) => a + b, 0)) / reviews[v].arr.length
-         setAverage(reviews[v].avg)
+         const v = name;
+         const oldArr = reviews[v].arr;
+         const newArr = oldArr;
+         newArr.push(newRating);
+         reviews[v].arr = newArr;
+
+         console.log(reviews[v].arr);
+
+         reviews[v].avg = (reviews[v].arr.reduce((a, b) => a + b, 0)) / reviews[v].arr.length;
+         setAverage(reviews[v].avg);
+
+         try {
+            //const postDoc = collection(db, 'Ratings').doc("8rfobioLy0mYHx4XgBKo");
+            //console.log(postDoc);
+            //const postDocSnapshot = await getDoc(postDoc); //look by doc id
+            //console.log(postDocSnapshot);
+            //const updatedRating = [...postDocSnapshot.data().avg, average];
+            //await updateDoc(postDoc, { avg: updatedRating });
+         } catch (error) {
+            console.error('Error updating document:', error);
+         }
+         
       }
    }
 
