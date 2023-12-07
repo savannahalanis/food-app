@@ -1,5 +1,6 @@
 import * as React from 'react';
-import {db} from '../Firebase.js'
+import {db} from '../Firebase.js';
+import { getStorage, ref, deleteObject } from "firebase/storage";
 import {collection, getDocs, updateDoc, doc, getDoc, where, query, deleteDoc} from 'firebase/firestore'
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -48,7 +49,15 @@ function Posts() {
    const [posts, setPosts] = useState([]);
 
    const deletePost = async(id) => {
-      const postDoc = doc(db, "Food_Post", id)
+      const postDoc = doc(db, "Food_Post", id);
+      /*const selectedPost = posts.find(post => post.id === id);
+      console.log(selectedPost.image);
+      const storage = getStorage();
+      const desertRef = ref(storage, 'images/desert.jpg');
+      deleteObject(desertRef).then(() => {
+      }).catch((error) => {
+         console.log(error);
+      });*/
       await deleteDoc(postDoc);
       setPosts((oldPostList) => oldPostList.filter((post) => post.id !== id));
    }

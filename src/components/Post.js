@@ -129,7 +129,7 @@ export const Post = ({post}) => {
             </Button>
             &nbsp;
             <Button variant="outlined" disableRipple={true} color="primary" size="small" startIcon={<LocalDiningIcon />}>
-            Restrictions: {/*TODO: pass in value*/}
+            Restrictions: {post.veg ? 'Vegetarian Dish' : null} {post.allergy ? 'Contains Peanuts' : null}
             </Button>
          </div>
          <Typography variant = "h5">Comments:</Typography>
