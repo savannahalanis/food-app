@@ -240,9 +240,7 @@ const StyledRating = styled(Rating)({
 //use update to update
 function Reviews() {
    const [reviews, setReviews] = useState([]);
-
-   const[average, setAverage] = useState(0)
-   //item.avg.toString()
+   const[average, setAverage] = useState(0);
 
    useEffect(() => {
 
@@ -260,32 +258,38 @@ function Reviews() {
          setReviews(filteredData);
 
       });
-   }, []);
+   }, [average]);
+
 
    const updateRating = async (newRating, name) => {
       if (newRating != null) {
-         const v = name;
-         const oldArr = reviews[v].arr;
-         const newArr = oldArr;
-         newArr.push(newRating);
-         reviews[v].arr = newArr;
-
-         console.log(reviews[v].arr);
-
-         reviews[v].avg = (reviews[v].arr.reduce((a, b) => a + b, 0)) / reviews[v].arr.length;
-         setAverage(reviews[v].avg);
-
-         try {
-            //const postDoc = collection(db, 'Ratings').doc("8rfobioLy0mYHx4XgBKo");
-            //console.log(postDoc);
-            //const postDocSnapshot = await getDoc(postDoc); //look by doc id
-            //console.log(postDocSnapshot);
-            //const updatedRating = [...postDocSnapshot.data().avg, average];
-            //await updateDoc(postDoc, { avg: updatedRating });
-         } catch (error) {
-            console.error('Error updating document:', error);
+         let v = 0;
+         switch(name)
+         {
+            case 0:
+               v = "8rfobioLy0mYHx4XgBKo";
+               break;
+            case 1:
+               v = "AbkOZLK6EfMP4UnxxxRe";
+               break;
+            case 2:
+               v = "HU0BTRfRD8S2psDUgzeM";
+               break;
+            case 3:
+               v = "OKeeTVvHLTpb3rWtYDyc";
+               break;
+            case 4:
+               v = "hU9G74XzQbewlZkF2uww";
+               break;
          }
-         
+         const postDoc = doc(db, 'Ratings', v);
+         console.log(postDoc);
+         const postDocSnapshot = await getDoc(postDoc);
+         var oldarr = postDocSnapshot.data().arr;
+         oldarr.push(newRating);
+         var updatedRating = oldarr.reduce((a, b) => a + b, 0) / oldarr.length;
+         await updateDoc(postDoc, { avg: updatedRating, arr:oldarr });  
+         setAverage(updatedRating);
       }
    }
 
