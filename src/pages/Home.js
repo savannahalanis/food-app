@@ -25,7 +25,8 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { Check } from '@mui/icons-material';
 
-
+import { useContext } from "react";
+import { Context } from "../context/AuthContext";
 
 
 //code adapted from https://javascript.works-hub.com/learn/building-a-modular-infinite-scroll-252dd
@@ -357,37 +358,23 @@ function PostButton() {
 }
 
 export default function HomePage(props) {  
-  const [user, setUser] = useState(null);
+ 
   const navigate = useNavigate();
   const auth = getAuth();
+  const {user} = useContext(Context);
 
-
-  onAuthStateChanged(auth, async(user) => {
-    if (user) {
-      setUser(user);
-    } else {
-      setUser(null);
-      navigate('/');
-    }
-  });
   useEffect(() => {
-   const unsubscribe = onAuthStateChanged(auth, (user) => {
-     if (user) {
-       setUser(user);
-     } else {
-       setUser(null);
-       navigate('/');
-     }
-   });
-   return () => unsubscribe();
- }, [auth, navigate]);
+   if (!user) {
+      navigate('/');
+     } 
+  
+ }, []);
  
 
    return (
       <div>
          {user ? (
          <>
-          
             <Navbar></Navbar>
 
             <div class="row" style ={{backgroundColor:"#FAF9F6"}}>

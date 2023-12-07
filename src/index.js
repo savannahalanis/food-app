@@ -14,6 +14,7 @@ import Home from './pages/Home'
 import UserPage from './pages/UserPage';
 import OtherUserPage from './pages/OtherUserPage';
 import HomeAdd from './pages/HomePageAdd';
+import { AuthContext } from './context/AuthContext';
 import './App.css';
 
 const theme = createTheme({
@@ -42,6 +43,7 @@ const theme = createTheme({
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+  <AuthContext>
   <React.StrictMode>
     <ThemeProvider theme = {theme} >
       <BrowserRouter>
@@ -60,6 +62,7 @@ root.render(
       </BrowserRouter>
     </ThemeProvider>
   </React.StrictMode>
+  </AuthContext>
 );
 
 //<Route path = "/userpage" element={<UserPage />}/>
