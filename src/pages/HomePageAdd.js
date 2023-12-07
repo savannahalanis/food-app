@@ -6,13 +6,14 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import {useEffect, useState} from 'react'
 import {db, storage} from '../Firebase.js'
 import {ref, uploadBytesResumable, listAll, getDownloadURL} from 'firebase/storage';
-import {getDocs, collection, addDoc, deleteDoc, updateDoc, doc, serverTimestamp} from 'firebase/firestore'
+import {getDocs, collection, addDoc, deleteDoc, updateDoc, doc, serverTimestamp, getDoc} from 'firebase/firestore'
 import Navbar from "../components/Navbar";
 import { Card, CardContent, Grid, TextField, Typography, InputLabel, Button } from "@mui/material";
 import "../components/Card.css"; 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'; 
 import { Link } from "react-router-dom";
 import {v4} from 'uuid';
+import {useDetermineUser, getNameFromID} from '../components/MarketPlaceFunctions.js'
 
 /*export default function HomeAdd() {
  
@@ -41,9 +42,11 @@ import {v4} from 'uuid';
 
 */
 
-
 export default function HomeAdd() {
   const [postList, setPostList] = useState([]);
+  const  {user, userDocID} = useDetermineUser();
+
+
   const postCollectionRef = collection(db, "Food_Post");
   const marketplaceCollectionRef = collection(db, "Selling_Post");
 
@@ -52,8 +55,6 @@ export default function HomeAdd() {
     const filteredData = data.docs.map((doc) => ({...doc.data(), id: doc.id}));
     setPostList(filteredData)
   };
-
-
   useEffect(() => {
     getPostList();
   }, []);
@@ -70,9 +71,7 @@ export default function HomeAdd() {
     var newTitle = data.get("title");
     var newText = (data.get("text"));
     var newLocation = data.get("location");
-    var imageUpload = data.get("image");
-
-    
+    var imageUpload = data.get("image");    
 
     try{
         const imageRef = ref(storage, `/food_post_images/${imageUpload.name + v4()}`);
@@ -85,7 +84,9 @@ export default function HomeAdd() {
           image: imageURL,
           location: newLocation,
           likes: [],
-          comments: []
+          comments: [],
+          uid: userDocID,
+          username: "temp"
         });
         alert("Sucessfully submitted post!!");
         getPostList();
