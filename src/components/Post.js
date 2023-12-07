@@ -14,7 +14,7 @@ import { Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import "./Card.css";
 import { Card } from '@mui/material';
-import {getNameFromID} from './MarketPlaceFunctions.js';
+import {getNameFromID, useDetermineUser} from './MarketPlaceFunctions.js';
 
 export const LikeButton = ({id, user, setNumLikes, numLikes}) => {
    const [liked, setLiked] = useState(false);
@@ -58,10 +58,9 @@ function CommentList({ comments }) {
       <>
        {Array.isArray(comments) && comments.map((comment, index) => (
          <ListItem disableGutters key={index} >
-            <ListItemText primary={comment}/>
+            <ListItemText primary={comment} />
          </ListItem>
          ))}
-
       </>
         
    );
@@ -69,9 +68,10 @@ function CommentList({ comments }) {
 
 export const Post = ({post}) => {
    const [comment, setComment] = useState('');
-   const [commentList, setCommentList] = useState([]);
+   const [commentList, setCommentList] = useState({});
    const [numLikes, setNumLikes] = useState(post.likes.length);
    const [username, setUserName] = useState('');
+   const  {user, userDocID} = useDetermineUser();
 
    useEffect(() => {
       const fetchComments = async () => {
@@ -91,12 +91,13 @@ export const Post = ({post}) => {
       fetchComments();
     }, []);
 
-   const handleComment = async (event, id) => {
+   const handleComment = async (event, id, userid) => {
       if (event.key === 'Enter') {
          try {
          const postDoc = doc(db, 'Food_Post', id);
          const postDocSnapshot = await getDoc(postDoc);
-         const updatedComments = [...postDocSnapshot.data().comments, comment];
+         const commenterName = (await getNameFromID(userid) || "anonymous");
+         const updatedComments = [...postDocSnapshot.data().comments, commenterName + ": " + comment];
          await updateDoc(postDoc, { comments: updatedComments });
          setCommentList(updatedComments);
          } catch (error) {
@@ -116,7 +117,7 @@ export const Post = ({post}) => {
          
          <div className="rowcontainer">
         
-            <LikeButton id={post.id} user={post.uid} setNumLikes={setNumLikes} numLikes={numLikes}></LikeButton>
+            <LikeButton id={post.id} user={userDocID} setNumLikes={setNumLikes} numLikes={numLikes}></LikeButton>
             &nbsp;
             <h3>{numLikes} likes</h3>
             </div>
@@ -133,7 +134,7 @@ export const Post = ({post}) => {
             </Button>
          </div>
          <Typography variant = "h5">Comments:</Typography>
-         <TextField label="Add comment:" variant="standard"  value={comment} onChange={(e) => setComment(e.target.value)} onKeyDown={(e) => handleComment(e, post.id)}/>
+         <TextField label="Add comment:" variant="standard"  value={comment} onChange={(e) => setComment(e.target.value)} onKeyDown={(e) => handleComment(e, post.id, userDocID)}/>
          <CommentList comments={commentList}></CommentList>
          <h5>{new Date(post.date.seconds*1000).toLocaleString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'})}</h5>
          <br /><br />
