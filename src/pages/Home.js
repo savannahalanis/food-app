@@ -32,12 +32,7 @@ import { Context } from "../context/AuthContext";
 //code adapted from https://javascript.works-hub.com/learn/building-a-modular-infinite-scroll-252dd
 let page = 1;
 export const fetchData = async (setPosts, posts) => {
-   /*axios
-      .get(`https://jsonplaceholder.typicode.com/photos?_page=${page}&_limit=10`) //fake API. basically, there are user objects with an albumId, id, title, url, thumbnailurl.
-      .then((res) => {
-         setItems([...items, ...res.data]); //adding what fetched to array
-         page = page + 1;
-      });*/
+
       const postCollectionRef = collection(db, "Food_Post")
       const data = await getDocs(postCollectionRef);
       const filteredData = data.docs.map((doc) => ({...doc.data(), id: doc.id}));
@@ -51,14 +46,7 @@ function Posts() {
 
    const deletePost = async(id) => {
       const postDoc = doc(db, "Food_Post", id);
-      /*const selectedPost = posts.find(post => post.id === id);
-      console.log(selectedPost.image);
-      const storage = getStorage();
-      const desertRef = ref(storage, 'images/desert.jpg');
-      deleteObject(desertRef).then(() => {
-      }).catch((error) => {
-         console.log(error);
-      });*/
+
       await deleteDoc(postDoc);
       setPosts((oldPostList) => oldPostList.filter((post) => post.id !== id));
    }
@@ -385,11 +373,7 @@ export default function HomePage(props) {
                   </div>
                </div>
                <div class="column middle">
-                  <div className='center'>
-                     <div class='bottommargin topmargin'>
-                        <Toggle></Toggle>
-                     </div>
-                  </div>
+                 
                   <div className='center'>
                      <Posts></Posts>
                   </div>

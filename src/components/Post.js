@@ -25,6 +25,7 @@ export const LikeButton = ({id, user, setNumLikes, numLikes}) => {
          const postDocSnapshot = await getDoc(postDoc); // Assuming you want to get the current state of the document
 
          const currentLikes = postDocSnapshot.data().likes;
+         
 
          if(!currentLikes.includes(user))
          {
@@ -33,10 +34,12 @@ export const LikeButton = ({id, user, setNumLikes, numLikes}) => {
             
             setLiked(!liked);
             setNumLikes(numLikes + 1);
-         }else{
-            setLiked(!liked);
-            setNumLikes(numLikes - 1);
          }
+         else{
+            alert("You already liked this post.")
+         }
+
+       
          
       } catch (error) {
          console.error('Error updating document:', error);
