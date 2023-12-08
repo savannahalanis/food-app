@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom';
 import "./Card.css";
 import { Card } from '@mui/material';
 import {getNameFromID, useDetermineUser} from './MarketPlaceFunctions.js';
+import {query, collection, where, getDocs} from 'firebase/firestore';
 
 export const LikeButton = ({id, user, setNumLikes, numLikes}) => {
    const [liked, setLiked] = useState(false);
@@ -84,9 +85,16 @@ export const Post = ({post}) => {
           console.log("postDocSnapshot: ", postDocSnapshot.data().comments);
           setCommentList(postDocSnapshot.data().comments || []);
           console.log("post id (for posts): ", post.uid);
-          post.userName = (await getNameFromID(post.uid) || "anonymous");
-          setUserName(post.userName);
-          console.log("username (for posts): ", post.userName);
+
+
+          // post.userName = (await getNameFromID(post.uid) || "anonymous");
+          const userQuery = query(collection(db, "Users"), where("uid", "==",  post.uid));
+          const userQuerySnapshot = await getDocs(userQuery);
+          const userDoc = doc(db, "Users", userQuerySnapshot.docs[0].id);
+          const userSnapshot = await getDoc(userDoc);
+          
+          setUserName(userSnapshot.data().displayName || "anonymous");
+          
         } catch (error) {
           console.error('Error fetching comments:', error);
         }
@@ -116,7 +124,7 @@ export const Post = ({post}) => {
    return(
       <>
       <Card className = "card" style = {{background:"white", width:"520px", padding: "1em" }}>
-      <Typography variant = "h4">{"@" + username || "@anonymous"}</Typography>   
+      <Typography variant = "h4">{"@" + username}</Typography>   
          <img src={post.image} height="500px" width="500px" /> <br />
          
          <div className="rowcontainer">

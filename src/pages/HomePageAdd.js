@@ -79,7 +79,7 @@ export default function HomeAdd() {
         });
         alert("Sucessfully submitted post!!");
         getPostList();
-        navigate('/');
+        navigate('/userpage');
     }catch(err){
         console.error(err);
         alert("Oops, something went wrong. Please try again");
